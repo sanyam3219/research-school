@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Axiom Labs | The System</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600;700&display=swap');
+
+        :root {
+            --bg: #030303;
+            --text: #ffffff;
+            --text-dim: #888888;
+            --accent-blue: rgba(10, 30, 80, 0.4);
+            --accent-purple: rgba(40, 10, 60, 0.4);
+            --border: rgba(255, 255, 255, 0.1);
+            --font: 'Space Grotesk', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: var(--font);
+            line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Ambient Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: 
+                radial-gradient(circle at 15% 50%, var(--accent-blue), transparent 40%),
+                radial-gradient(circle at 85% 30%, var(--accent-purple), transparent 40%);
+            z-index: -2;
+        }
+
+        /* Abstract Grid Overlay */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-image: 
+                linear-gradient(var(--border) 1px, transparent 1px),
+                linear-gradient(90deg, var(--border) 1px, transparent 1px);
+            background-size: 40px 40px;
+            opacity: 0.15;
+            z-index: -1;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(3, 3, 3, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            z-index: 100;
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-weight: 700;
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: color 0.3s ease;
+            cursor: pointer;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--text);
+        }
+
+        /* Layout & Pages */
+        .page {
+            display: none;
+            min-height: 100vh;
+            padding: 120px 2rem 4rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Typography */
+        h1 {
+            font-size: clamp(3rem, 8vw, 6rem);
+            line-height: 1;
+            font-weight: 700;
+            letter-spacing: -2px;
+            margin-bottom: 1rem;
+        }
+
+        h2 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 600;
+            letter-spacing: -1px;
+            margin-bottom: 2rem;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            font-weight: 400;
+            color: var(--text-dim);
+            margin-bottom: 1rem;
+        }
+
+        p {
+            font-size: 1.1rem;
+            color: var(--text-dim);
+            max-width: 600px;
+            margin-bottom: 2rem;
+        }
+
+        .statement {
+            font-size: 1.5rem;
+            color: var(--text);
+            margin-bottom: 1rem;
+        }
+
+        /* Components */
+        .btn {
+            display: inline-block;
+            background: var(--text);
+            color: var(--bg);
+            padding: 1rem 2.5rem;
+            text-decoration: none;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: 1px solid var(--text);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background: transparent;
+            color: var(--text);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+        .btn-outline:hover {
+            border-color: var(--text);
+            background: rgba(255,255,255,0.05);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+
+        .card {
+            border: 1px solid var(--border);
+            padding: 3rem 2rem;
+            background: rgba(0,0,0,0.4);
+            backdrop-filter: blur(5px);
+            transition: border-color 0.3s ease;
+        }
+
+        .card:hover {
+            border-color: rgba(255,255,255,0.3);
+        }
+
+        .card h3 {
+            color: var(--text);
+            margin-bottom: 1.5rem;
+        }
+
+        ul.minimal-list {
+            list-style: none;
+        }
+
+        ul.minimal-list li {
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 0;
+            color: var(--text-dim);
+            font-size: 1.1rem;
+        }
+        
+        ul.minimal-list li:last-child {
+            border-bottom: none;
+        }
+
+        /* Page Specific */
+        .hero-section {
+            height: calc(100vh - 120px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .bold-list {
+            font-size: 2rem;
+            font-weight: 700;
+            line-height: 1.8;
+            text-transform: uppercase;
+            letter-spacing: -1px;
+        }
+
+        .bold-list span {
+            display: block;
+            color: var(--text-dim);
+            transition: color 0.3s ease;
+        }
+
+        .bold-list span:hover {
+            color: var(--text);
+        }
+
+        .form-group {
+            margin-bottom: 2rem;
+        }
+
+        input, textarea {
+            width: 100%;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 0;
+            color: var(--text);
+            font-family: var(--font);
+            font-size: 1.1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--text);
+        }
+
+        .spacer {
+            height: 10vh;
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1rem;
+            }
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 1rem;
+            }
+            .page {
+                padding-top: 150px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo" onclick="nav('home')">Axiom Labs</div>
+        <div class="nav-links">
+            <a onclick="nav('home')" class="active" data-target="home">Home</a>
+            <a onclick="nav('founders')" data-target="founders">Founders Track</a>
+            <a onclick="nav('network')" data-target="network">Research Network</a>
+            <a onclick="nav('knowledge')" data-target="knowledge">Knowledge Engine</a>
+            <a onclick="nav('admissions')" data-target="admissions">Admissions</a>
+            <a onclick="nav('philosophy')" data-target="philosophy">Philosophy</a>
+            <a onclick="nav('contact')" data-target="contact">Contact</a>
+        </div>
+    </nav>
+
+    <div id="home" class="page active">
+        <div class="hero-section">
+            <h1>Not for Everyone.</h1>
+            <p>For those who question everything.</p>
+            <div><a onclick="nav('admissions')" class="btn">Apply</a></div>
+        </div>
+
+        <div class="spacer"></div>
+
+        <div class="statement">Not a college.</div>
+        <div class="statement">Not an online course.</div>
+        <div class="statement">Not for the average.</div>
+        <div class="statement" style="color: var(--text); font-weight: 700; margin-top: 2rem;">A system for building scientists.</div>
+
+        <div class="spacer"></div>
+
+        <h2>The System</h2>
+        <div class="grid">
+            <div class="card">
+                <h3>Founders Track</h3>
+                <p>Residential program. 4 years. Deep work.</p>
+            </div>
+            <div class="card">
+                <h3>Open Research Network</h3>
+                <p>Offline, across India. Meet and build.</p>
+            </div>
+            <div class="card">
+                <h3>Knowledge Engine</h3>
+                <p>Open digital library for self-driven learners.</p>
+            </div>
+        </div>
+
+        <div class="spacer"></div>
+
+        <h2>How It Works</h2>
+        <div class="grid" style="grid-template-columns: repeat(4, 1fr); gap: 1rem;">
+            <div class="card" style="padding: 2rem 1rem; text-align: center;">Apply</div>
+            <div class="card" style="padding: 2rem 1rem; text-align: center;">Get Selected</div>
+            <div class="card" style="padding: 2rem 1rem; text-align: center;">Enter the System</div>
+            <div class="card" style="padding: 2rem 1rem; text-align: center;">Work on Real Problems</div>
+        </div>
+
+        <div class="spacer"></div>
+
+        <h2>Who It's For</h2>
+        <div class="bold-list">
+            <span>The curious.</span>
+            <span>The obsessed.</span>
+            <span>The ones who don't fit.</span>
+        </div>
+
+        <div class="spacer"></div>
+        
+        <div style="text-align: center; padding: 4rem 0; border-top: 1px solid var(--border);">
+            <p style="margin: 0 auto 2rem;">Applications are limited.</p>
+            <a onclick="nav('admissions')" class="btn">Apply Now</a>
+        </div>
+    </div>
+
+    <div id="founders" class="page">
+        <h1>Four Years.<br>No Distractions.</h1>
+        <p>A highly selective residential program in Bangalore designed to build deep expertise in science and engineering.</p>
+        
+        <div class="spacer"></div>
+
+        <h2>Tracks</h2>
+        <ul class="minimal-list">
+            <li>Mathematics & Physics</li>
+            <li>Mathematics & Computer Science</li>
+            <li>Systems Engineering</li>
+        </ul>
+
+        <div class="spacer"></div>
+
+        <div class="grid">
+            <div class="card">
+                <h3>Mentorship-Driven</h3>
+                <p>Learn directly from operators and experts, not just lecturers.</p>
+            </div>
+            <div class="card">
+                <h3>Research-First</h3>
+                <p>Publish, prototype, and push boundaries from day one.</p>
+            </div>
+            <div class="card">
+                <h3>Zero Classrooms</h3>
+                <p>No traditional classroom structure. Project and thesis oriented.</p>
+            </div>
+            <div class="card">
+                <h3>Real-World Focus</h3>
+                <p>Focus entirely on solving real-world, hard physical and computational problems.</p>
+            </div>
+        </div>
+
+        <div class="spacer"></div>
+        <a onclick="nav('admissions')" class="btn">Apply for Founders Track</a>
+    </div>
+
+    <div id="network" class="page">
+        <h1>Research Doesn’t Belong to Institutions.</h1>
+        <p>A decentralized, offline-first research community across India. Open access but selective entry.</p>
+
+        <div class="spacer"></div>
+
+        <h2>Infrastructure</h2>
+        <ul class="minimal-list">
+            <li><strong>City Meetups</strong> — Regular high-density intellectual gatherings.</li>
+            <li><strong>Hackathons</strong> — Time-boxed, intense building sessions.</li>
+            <li><strong>Paper Discussions</strong> — Deconstructing state-of-the-art research.</li>
+            <li><strong>Collaborative Projects</strong> — Finding co-authors and co-founders.</li>
+            <li><strong>Bangalore Hacker House</strong> — Co-working and residential hub for researchers.</li>
+        </ul>
+
+        <div class="spacer"></div>
+        <a onclick="nav('contact')" class="btn">Join the Network</a>
+    </div>
+
+    <div id="knowledge" class="page">
+        <h1>Learn Without Waiting.</h1>
+        <p>An open digital library designed for deep, structured STEM learning. Accessible to anyone globally.</p>
+
+        <div class="spacer"></div>
+
+        <div class="grid">
+            <div class="card">
+                <h3>Domain-Specific Paths</h3>
+                <p>Curated roadmaps from zero to state-of-the-art.</p>
+            </div>
+            <div class="card">
+                <h3>Research Curriculum</h3>
+                <p>Designed to take you to the frontier of human knowledge.</p>
+            </div>
+            <div class="card">
+                <h3>Self-Paced & Rigorous</h3>
+                <p>No deadlines, but extreme intellectual demands.</p>
+            </div>
+        </div>
+
+        <div class="spacer"></div>
+        <a href="#" class="btn btn-outline">Explore Knowledge Engine</a>
+    </div>
+
+    <div id="admissions" class="page">
+        <h1>Selection is the Filter.</h1>
+        <p>Highly selective process based on curiosity, thinking ability, and intent. No emphasis on marks or traditional scores.</p>
+
+        <div class="spacer"></div>
+
+        <h2>The Process</h2>
+        <div class="grid" style="grid-template-columns: 1fr;">
+            <div class="card">
+                <h3>1. Written Screening</h3>
+                <p>Test of fundamental logic, problem-solving, and articulation.</p>
+            </div>
+            <div class="card">
+                <h3>2. Interview</h3>
+                <p>Technical and philosophical discussion with core mentors.</p>
+            </div>
+            <div class="card">
+                <h3>3. Profile Evaluation</h3>
+                <p>Assessing past builds, obsession, and capacity for deep work.</p>
+            </div>
+        </div>
+
+        <div class="spacer"></div>
+        <a href="#" class="btn">Apply for the First Cohort</a>
+    </div>
+
+    <div id="philosophy" class="page">
+        <h1>Why This Exists.</h1>
+        
+        <div class="spacer"></div>
+
+        <div class="bold-list">
+            <span>Depth over degrees.</span>
+            <span>Curiosity over compliance.</span>
+            <span>Build, don't memorize.</span>
+            <span>Small groups, deep work.</span>
+            <span>Systems over institutions.</span>
+        </div>
+    </div>
+
+    <div id="contact" class="page">
+        <h1>Contact.</h1>
+        <p>Axiom Labs | Bangalore, India</p>
+
+        <div class="spacer"></div>
+
+        <div style="max-width: 500px;">
+            <div class="form-group">
+                <input type="text" placeholder="Name">
+            </div>
+            <div class="form-group">
+                <input type="email" placeholder="Email">
+            </div>
+            <div class="form-group">
+                <textarea rows="4" placeholder="Application inquiry or intent"></textarea>
+            </div>
+            <a href="#" class="btn btn-outline">Transmit</a>
+        </div>
+
+        <div class="spacer"></div>
+        <p>Direct: <a href="mailto:sys@axiomlabs.in" style="color: var(--text);">sys@axiomlabs.in</a></p>
+    </div>
+
+    <script>
+        function nav(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Remove active class from nav links
+            document.querySelectorAll('.nav-links a').forEach(link => {
+                link.classList.remove('active');
+            });
+
+            // Show selected page
+            document.getElementById(pageId).classList.add('active');
+            
+            // Highlight nav link
+            const activeLink = document.querySelector(`.nav-links a[data-target="${pageId}"]`);
+            if(activeLink) activeLink.classList.add('active');
+
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+    </script>
+</body>
+</html>
