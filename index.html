@@ -145,6 +145,15 @@
             color: var(--text-dim);
             margin-bottom: 1rem;
         }
+        
+        h4 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
 
         p {
             font-size: 1.1rem;
@@ -196,6 +205,13 @@
             gap: 2rem;
             margin-top: 4rem;
         }
+        
+        .curriculum-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 3rem;
+            margin-top: 2rem;
+        }
 
         .card {
             border: 1px solid var(--border);
@@ -227,6 +243,22 @@
         
         ul.minimal-list li:last-child {
             border-bottom: none;
+        }
+        
+        .timeline-item {
+            margin-bottom: 1.5rem;
+            padding-left: 1rem;
+            border-left: 1px solid var(--border);
+        }
+        
+        .timeline-item span {
+            display: block;
+            color: var(--text);
+            font-weight: 600;
+            margin-bottom: 0.2rem;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
         }
 
         /* Page Specific */
@@ -303,7 +335,7 @@
         <div class="logo" onclick="nav('home')">Sapiens Research Labs</div>
         <div class="nav-links">
             <a onclick="nav('home')" class="active" data-target="home">Home</a>
-            <a onclick="nav('founders')" data-target="founders">Founders Track</a>
+            <a onclick="nav('ug-program')" data-target="ug-program">UG Program</a>
             <a onclick="nav('network')" data-target="network">Research Network</a>
             <a onclick="nav('knowledge')" data-target="knowledge">Knowledge Engine</a>
             <a onclick="nav('admissions')" data-target="admissions">Admissions</a>
@@ -315,15 +347,15 @@
     <div id="home" class="page active">
         <div class="hero-section">
             <h1>For those who question everything.</h1>
-            <p>towards India's next noble prize</p>
+            <p>towards India's next nobel prize.</p>
             <div><a onclick="nav('admissions')" class="btn">Apply</a></div>
         </div>
 
         <div class="spacer"></div>
 
         <div class="statement">Not a college.</div>
-        <div class="statement">Not an online course.</div>
-        <div class="statement">Not for the average.</div>
+        <div class="statement">Not a hacker house.</div>
+        <div class="statement">Top 1% Pure Science Talent</div>
         <div class="statement" style="color: var(--text); font-weight: 700; margin-top: 2rem;">A system for building scientists.</div>
 
         <div class="spacer"></div>
@@ -331,7 +363,7 @@
         <h2>The System</h2>
         <div class="grid">
             <div class="card">
-                <h3>Founders Track</h3>
+                <h3>UG Program</h3>
                 <p>Residential program. 4 years. Deep work.</p>
             </div>
             <div class="card">
@@ -371,18 +403,79 @@
         </div>
     </div>
 
-    <div id="founders" class="page">
+    <div id="ug-program" class="page">
         <h1>Four Years.<br>No Distractions.</h1>
         <p>A highly selective residential program in Bangalore designed to build deep expertise in science and engineering.</p>
         
         <div class="spacer"></div>
 
-        <h2>Tracks</h2>
-        <ul class="minimal-list">
-            <li>Mathematics & Physics</li>
-            <li>Mathematics & Computer Science</li>
-            <li>Systems Engineering</li>
-        </ul>
+        <h2>The Curriculum</h2>
+        <p>No electives. No filler. Pure depth.</p>
+        
+        <div class="curriculum-grid">
+            <div>
+                <h4>Mathematics & Physics</h4>
+                <div class="spacer" style="height: 2vh;"></div>
+                <div class="timeline-item">
+                    <span>Year 1: Foundations</span>
+                    Abstract Algebra, Classical Mechanics, Real & Complex Analysis.
+                </div>
+                <div class="timeline-item">
+                    <span>Year 2: Architecture</span>
+                    Differential Geometry, Quantum Mechanics, Statistical Mechanics.
+                </div>
+                <div class="timeline-item">
+                    <span>Year 3: The Frontier</span>
+                    Quantum Field Theory, General Relativity, Directed Research.
+                </div>
+                <div class="timeline-item">
+                    <span>Year 4: Output</span>
+                    Thesis Formulation, Prototype / Simulation, Publication.
+                </div>
+            </div>
+
+            <div>
+                <h4>Mathematics & Computer Science</h4>
+                <div class="spacer" style="height: 2vh;"></div>
+                <div class="timeline-item">
+                    <span>Year 1: Foundations</span>
+                    Combinatorics, Theory of Computation, Systems Programming (C/Rust).
+                </div>
+                <div class="timeline-item">
+                    <span>Year 2: Architecture</span>
+                    Cryptography, Distributed Systems, Compiler Design.
+                </div>
+                <div class="timeline-item">
+                    <span>Year 3: The Frontier</span>
+                    Machine Learning Engineering, Quantum Computing, Directed Research.
+                </div>
+                <div class="timeline-item">
+                    <span>Year 4: Output</span>
+                    Thesis Formulation, Architecture Deployment, Publication.
+                </div>
+            </div>
+
+            <div>
+                <h4>Systems Engineering</h4>
+                <div class="spacer" style="height: 2vh;"></div>
+                <div class="timeline-item">
+                    <span>Year 1: Foundations</span>
+                    Control Theory, Embedded Systems, Advanced Circuit Design.
+                </div>
+                <div class="timeline-item">
+                    <span>Year 2: Architecture</span>
+                    Robotics Kinematics, Signal Processing, Microarchitecture.
+                </div>
+                <div class="timeline-item">
+                    <span>Year 3: The Frontier</span>
+                    Autonomous Systems, Aerospace Dynamics, Directed Research.
+                </div>
+                <div class="timeline-item">
+                    <span>Year 4: Output</span>
+                    Hardware Prototype, Stress Testing, Publication.
+                </div>
+            </div>
+        </div>
 
         <div class="spacer"></div>
 
@@ -406,7 +499,7 @@
         </div>
 
         <div class="spacer"></div>
-        <a onclick="nav('admissions')" class="btn">Apply for Founders Track</a>
+        <a onclick="nav('admissions')" class="btn">Apply for UG Program</a>
     </div>
 
     <div id="network" class="page">
