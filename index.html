@@ -650,25 +650,22 @@
     <h2>Generate Your Learning Path</h2>
     <p>Enter any topic in science or technology</p>
 
-    <div style="margin-top: 2rem;">
-        <input 
-            id="userInput"
-            type="text"
-            placeholder="e.g. Quantum Mechanics"
-            style="text-align: center; font-size: 1.2rem;"
-        >
-    </div>
-
+  <div style="margin-top: 2rem;">
+    <input 
+        id="userInput"
+        type="text"
+        placeholder="Ask anything in science… (e.g. Quantum Mechanics)"
+        onkeypress="handleKey(event)"
+        style="text-align: center; font-size: 1.2rem;"
+    >
+</div>
     <div style="margin-top: 2rem;">
         <button class="btn" onclick="generateCurriculum()">
             Generate Curriculum
         </button>
     </div>
 
-    <div id="output" style="margin-top: 3rem; text-align: left;"></div>
-   <div style="max-width: 800px; margin: 0 auto; text-align: center;">
-    <div id="ai-agent"></div>
-</div>
+   
 
 </div>
        
@@ -798,6 +795,50 @@
                 setTimeout(initAnimations, 400); 
             }, 4200); 
         });
+        function handleKey(event) {
+    if (event.key === "Enter") {
+        generateCurriculum();
+    }
+}
+        async function generateCurriculum() {
+    const inputEl = document.getElementById("userInput");
+    const input = inputEl.value;
+    const outputDiv = document.getElementById("output");
+
+    if (!input) {
+        outputDiv.innerHTML = "<p>Please enter a topic.</p>";
+        return;
+    }
+
+    // 🔥 UI transformation
+    inputEl.style.textAlign = "left";
+    inputEl.style.borderBottom = "1px solid white";
+    inputEl.blur();
+
+    outputDiv.innerHTML = "<p>Thinking...</p>";
+
+    try {
+        const response = await fetch("/api/generate", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ input })
+        });
+
+        const data = await response.json();
+
+        outputDiv.innerHTML = `
+            <div class="card">
+                <h3>${input}</h3>
+                <p>${data.text.replace(/\n/g, "<br>")}</p>
+            </div>
+        `;
+
+    } catch (err) {
+        outputDiv.innerHTML = "<p>Error generating curriculum.</p>";
+    }
+}
     </script>
         
     <script src="https://cdn.botpress.cloud/webchat/v3.6/inject.js"></script>
