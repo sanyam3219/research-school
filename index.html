@@ -668,46 +668,6 @@
     <div id="output" style="margin-top: 3rem; text-align: left;"></div>
 
 </div>
-        <script>
-async function generateCurriculum() {
-    const input = document.getElementById("userInput").value;
-    const outputDiv = document.getElementById("output");
-
-    if (!input) {
-        outputDiv.innerHTML = "<p>Please enter a topic.</p>";
-        return;
-    }
-
-    outputDiv.innerHTML = "<p>Generating...</p>";
-
-    try {
-        const response = await fetch("https://api.botpress.cloud/v1/chat/completions", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": "Bearer bp_bak_Fy664NFNse-zZOtwgeSMfZ143zFxZWyQIGhS"
-            },
-            body: JSON.stringify({
-                messages: [
-                    {
-                        role: "user",
-                        content: input
-                    }
-                ]
-            })
-        });
-
-        const data = await response.json();
-
-        const text = data.choices?.[0]?.message?.content || "No response";
-
-        outputDiv.innerHTML = `<pre style="white-space: pre-wrap;">${text}</pre>`;
-
-    } catch (error) {
-        outputDiv.innerHTML = "<p>Error generating curriculum.</p>";
-    }
-}
-</script>
        
 
     <div id="admissions" class="page">
@@ -836,5 +796,46 @@ async function generateCurriculum() {
             }, 4200); 
         });
     </script>
+         <script>
+async function generateCurriculum() {
+    const input = document.getElementById("userInput").value;
+    const outputDiv = document.getElementById("output");
+
+    if (!input) {
+        outputDiv.innerHTML = "<p>Please enter a topic.</p>";
+        return;
+    }
+
+    outputDiv.innerHTML = "<p>Generating...</p>";
+
+    try {
+        const response = await fetch("https://api.botpress.cloud/v1/chat/completions", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer bp_bak_M4GLJRDmx9t6PlzRqif-jeCZWmRBAa9bCCf8"
+            },
+            body: JSON.stringify({
+                messages: [
+                    {
+                        role: "user",
+                        content: input
+                    }
+                ]
+            })
+        });
+
+        const data = await response.json();
+
+        const text = data.choices?.[0]?.message?.content || "No response";
+
+        outputDiv.innerHTML = `<pre style="white-space: pre-wrap;">${text}</pre>`;
+
+    } catch (error) {
+        outputDiv.innerHTML = "<p>Error generating curriculum.</p>";
+    }
+}
+</script>
+       
 </body>
 </html>
