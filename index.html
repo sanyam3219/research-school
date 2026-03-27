@@ -796,57 +796,7 @@
             }, 4200); 
         });
     </script>
-        <script>
-async function generateCurriculum() {
-    const input = document.getElementById("userInput").value;
-    const outputDiv = document.getElementById("output");
-
-    if (!input) {
-        outputDiv.innerHTML = "<p>Please enter a topic.</p>";
-        return;
-    }
-
-    outputDiv.innerHTML = "<p>Generating...</p>";
-
-    try {
-        const response = await fetch("https://api.openai.com/v1/chat/completions", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": "Bearer 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"
-            },
-            body: JSON.stringify({
-                model: "gpt-4o-mini",
-                messages: [
-                    {
-                        role: "system",
-                        content: `You are an expert curriculum generator. Do not ask questions. Generate structured roadmap with phases, topics, resources, timeline, and projects.`
-                    },
-                    {
-                        role: "user",
-                        content: input
-                    }
-                ]
-            })
-        });
-
-        const data = await response.json();
-
-        const text = data.choices[0].message.content;
-
-        outputDiv.innerHTML = `
-            <div class="card">
-                <h3>${input}</h3>
-                <p style="white-space: pre-line;">${text}</p>
-            </div>
-        `;
-
-    } catch (error) {
-        console.error(error);
-        outputDiv.innerHTML = "<p>Error generating curriculum.</p>";
-    }
-}
-</script>
+       
        
 </body>
 </html>
