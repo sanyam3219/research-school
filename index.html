@@ -643,29 +643,72 @@
     </div>
 
     <div id="knowledge" class="page">
-        <h1 class="fade-up">Learn Without Waiting.</h1>
-        <p class="fade-up delay-1">An open digital library designed for deep, structured STEM learning. Accessible to anyone globally.</p>
-
         <div class="spacer"></div>
 
-        <div class="grid">
-            <div class="card fade-up delay-1">
-                <h3>Domain-Specific Paths</h3>
-                <p>Curated roadmaps from zero to state-of-the-art.</p>
-            </div>
-            <div class="card fade-up delay-2">
-                <h3>Research Curriculum</h3>
-                <p>Designed to take you to the frontier of human knowledge.</p>
-            </div>
-            <div class="card fade-up delay-3">
-                <h3>Self-Paced & Rigorous</h3>
-                <p>No deadlines, but extreme intellectual demands.</p>
-            </div>
-        </div>
+<div style="max-width: 800px; margin: 0 auto; text-align: center;">
+    
+    <h2>Generate Your Learning Path</h2>
+    <p>Enter any topic in science or technology</p>
 
-        <div class="spacer"></div>
-        <a href="#" class="btn btn-outline fade-up">Explore Knowledge Engine</a>
+    <div style="margin-top: 2rem;">
+        <input 
+            id="userInput"
+            type="text"
+            placeholder="e.g. Quantum Mechanics"
+            style="text-align: center; font-size: 1.2rem;"
+        >
     </div>
+
+    <div style="margin-top: 2rem;">
+        <button class="btn" onclick="generateCurriculum()">
+            Generate Curriculum
+        </button>
+    </div>
+
+    <div id="output" style="margin-top: 3rem; text-align: left;"></div>
+
+</div>
+        <script>
+async function generateCurriculum() {
+    const input = document.getElementById("userInput").value;
+    const outputDiv = document.getElementById("output");
+
+    if (!input) {
+        outputDiv.innerHTML = "<p>Please enter a topic.</p>";
+        return;
+    }
+
+    outputDiv.innerHTML = "<p>Generating...</p>";
+
+    try {
+        const response = await fetch("https://api.botpress.cloud/v1/chat/completions", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer bp_bak_Fy664NFNse-zZOtwgeSMfZ143zFxZWyQIGhS"
+            },
+            body: JSON.stringify({
+                messages: [
+                    {
+                        role: "user",
+                        content: input
+                    }
+                ]
+            })
+        });
+
+        const data = await response.json();
+
+        const text = data.choices?.[0]?.message?.content || "No response";
+
+        outputDiv.innerHTML = `<pre style="white-space: pre-wrap;">${text}</pre>`;
+
+    } catch (error) {
+        outputDiv.innerHTML = "<p>Error generating curriculum.</p>";
+    }
+}
+</script>
+       
 
     <div id="admissions" class="page">
         <h1 class="fade-up">Selection is the Filter.</h1>
