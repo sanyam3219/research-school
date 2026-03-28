@@ -664,7 +664,30 @@
         </div>
 
         <div class="spacer"></div>
-        <a href="#" class="btn btn-outline fade-up">Explore Knowledge Engine</a>
+
+<div style="max-width: 800px; margin: 0 auto; text-align: center;">
+    
+    <h2>Generate Your Learning Path</h2>
+    <p>Enter any topic in science or technology</p>
+
+    <div style="margin-top: 2rem;">
+        <input 
+            id="userInput"
+            type="text"
+            placeholder="e.g. Quantum Mechanics"
+            style="text-align: center; font-size: 1.2rem;"
+        >
+    </div>
+
+    <div style="margin-top: 2rem;">
+        <button class="btn" onclick="generateCurriculum()">
+            Generate Curriculum
+        </button>
+    </div>
+
+    <div id="output" style="margin-top: 3rem; text-align: left;"></div>
+
+</div>
     </div>
 
     <div id="admissions" class="page">
@@ -793,5 +816,53 @@
             }, 4200); 
         });
     </script>
+    <script>
+  window.botpressWebChat.init({
+    botId: "KAE3VFQ6",
+    hostUrl: "https://cdn.botpress.cloud/webchat/v1",
+    messagingUrl: "https://messaging.botpress.cloud",
+    showWidget: false   // 🔥 IMPORTANT (hides bubble)
+  });
+</script>
+<script>
+async function generateCurriculum() {
+    const input = document.getElementById("userInput").value;
+    const outputDiv = document.getElementById("output");
+
+    if (!input) {
+        outputDiv.innerHTML = "<p>Please enter a topic.</p>";
+        return;
+    }
+
+    outputDiv.innerHTML = "<p>Generating...</p>";
+
+    try {
+        const response = await fetch("https://api.botpress.cloud/v1/chat/completions", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer bp_bak_YukmLrJowjl9S4H3Nt2Zp4nc15tG7laciHa_"
+            },
+            body: JSON.stringify({
+                messages: [
+                    {
+                        role: "user",
+                        content: input
+                    }
+                ]
+            })
+        });
+
+        const data = await response.json();
+
+        const text = data.choices?.[0]?.message?.content || "No response";
+
+        outputDiv.innerHTML = `<pre style="white-space: pre-wrap;">${text}</pre>`;
+
+    } catch (error) {
+        outputDiv.innerHTML = "<p>Error generating curriculum.</p>";
+    }
+}
+</script>
 </body>
 </html>
