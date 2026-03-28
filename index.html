@@ -81,86 +81,172 @@
             transition: opacity 0.8s ease, visibility 0.8s ease;
         }
 
-        .cosmos {
+        .loader-stage {
             position: relative;
             width: 300px;
             height: 300px;
             display: flex;
             justify-content: center;
             align-items: center;
-            transform-style: preserve-3d;
-            animation: cosmos-zoom 4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            perspective: 1000px;
         }
 
-        .center-mass {
+        /* Milky Way Galaxy */
+        .milky-way {
             position: absolute;
-            width: 24px;
-            height: 24px;
+            width: 280px;
+            height: 280px;
             border-radius: 50%;
-            animation: center-pulse 4s forwards;
+            /* Galactic core and spiral arms */
+            background: 
+                radial-gradient(circle at center, #ffffff 0%, #ffccaa 8%, transparent 35%),
+                conic-gradient(from 0deg, 
+                    transparent 0deg, 
+                    rgba(100, 150, 255, 0.4) 40deg, 
+                    rgba(255, 255, 255, 0.9) 90deg, 
+                    transparent 120deg, 
+                    transparent 180deg, 
+                    rgba(200, 100, 255, 0.4) 220deg, 
+                    rgba(255, 255, 255, 0.9) 270deg, 
+                    transparent 300deg);
+            filter: blur(4px);
+            transform: rotateX(60deg);
+            animation: spin-galaxy 3s linear infinite, collapse-galaxy 1.5s 1.5s cubic-bezier(0.5, 0, 0.2, 1) forwards;
+        }
+
+        /* CSS Drawn Rocket */
+        .rocket-container {
+            position: absolute;
             z-index: 10;
+            animation: launch-rocket 2.2s cubic-bezier(0.5, 0, 0.8, 1) forwards;
         }
-
-        .ring {
-            position: absolute;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 50%;
-            top: 50%;
-            left: 50%;
-            transform-origin: center;
-        }
-
-        .r1 { width: 100px; height: 100px; animation: to-atom-1 4s forwards; }
-        .r2 { width: 180px; height: 180px; animation: to-atom-2 4s forwards; }
-        .r3 { width: 260px; height: 260px; animation: to-atom-3 4s forwards; }
 
         .rocket {
+            position: relative;
+            width: 16px;
+            height: 40px;
+        }
+
+        .rocket-body {
             position: absolute;
-            width: 4px;
-            height: 20px;
+            top: 0; left: 3px; right: 3px; bottom: 8px;
             background: #ffffff;
-            border-radius: 50% 50% 2px 2px;
-            top: 50%;
-            left: 50%;
-            transform-origin: bottom center;
-            box-shadow: 0 6px 15px rgba(255, 100, 0, 0.9);
-            animation: rocket-launch 2.5s cubic-bezier(0.5, 0, 0.8, 1) forwards;
+            border-radius: 50% 50% 3px 3px;
+            z-index: 2;
+            box-shadow: inset -2px -2px 5px rgba(0,0,0,0.2);
+        }
+
+        .rocket-window {
+            position: absolute;
+            top: 10px; left: 50%;
+            transform: translateX(-50%);
+            width: 6px; height: 6px;
+            background: #030303;
+            border: 1px solid #6495ED;
+            border-radius: 50%;
+            z-index: 3;
+        }
+
+        .rocket-fins {
+            position: absolute;
+            bottom: 8px; left: -4px; right: -4px; height: 12px;
+            background: #888888;
+            clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+            z-index: 1;
+        }
+
+        .rocket-flame {
+            position: absolute;
+            bottom: -16px; left: 4px; right: 4px; height: 20px;
+            background: linear-gradient(to bottom, #ffffff, #ffcc00, #ff0000);
+            border-radius: 0 0 50% 50%;
+            animation: flicker 0.1s infinite alternate;
+        }
+
+        /* Atom Structure */
+        .atom {
+            position: absolute;
+            width: 220px;
+            height: 220px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transform: scale(0);
+            animation: reveal-atom 1.5s 2.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+            transform-style: preserve-3d;
+        }
+
+        .nucleus {
+            position: absolute;
+            width: 16px; height: 16px;
+            background: #00eeff;
+            border-radius: 50%;
+            box-shadow: 0 0 15px #00eeff, 0 0 30px #00eeff, 0 0 50px rgba(0, 238, 255, 0.5);
             z-index: 5;
         }
 
-        @keyframes rocket-launch {
-            0% { transform: translate(-50%, -50%) translateY(0) scale(1); opacity: 1; }
-            40% { transform: translate(-50%, -50%) translateY(-150px) scale(0.6); opacity: 1; }
-            60% { transform: translate(-50%, -50%) translateY(-250px) scale(0.3); opacity: 0; }
-            100% { transform: translate(-50%, -50%) translateY(-400px) scale(0); opacity: 0; }
+        .orbit {
+            position: absolute;
+            width: 100%; height: 100%;
+            border: 2px solid rgba(0, 238, 255, 0.3);
+            border-radius: 50%;
+            transform-style: preserve-3d;
         }
 
-        @keyframes to-atom-1 {
-            0%, 45% { transform: translate(-50%, -50%) rotateX(0deg) rotateY(0deg); width: 100px; height: 100px; }
-            65%, 100% { transform: translate(-50%, -50%) rotateX(75deg) rotateY(45deg); width: 220px; height: 220px; border-color: rgba(100, 150, 255, 0.6); border-width: 2px; }
+        .orbit::before {
+            content: '';
+            position: absolute;
+            top: -4px; left: 50%;
+            width: 8px; height: 8px;
+            background: #ffffff;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #ffffff;
+            transform: translateX(-50%);
         }
 
-        @keyframes to-atom-2 {
-            0%, 45% { transform: translate(-50%, -50%) rotateX(0deg) rotateY(0deg); width: 180px; height: 180px; }
-            65%, 100% { transform: translate(-50%, -50%) rotateX(75deg) rotateY(-45deg); width: 220px; height: 220px; border-color: rgba(150, 100, 255, 0.6); border-width: 2px; }
+        .o1 { transform: rotateX(75deg) rotateY(0deg); animation: spin-orbit 3s linear infinite; }
+        .o2 { transform: rotateX(75deg) rotateY(60deg); animation: spin-orbit 3s linear infinite reverse; }
+        .o3 { transform: rotateX(75deg) rotateY(120deg); animation: spin-orbit 3s linear infinite; }
+
+        /* Loader Keyframes */
+        @keyframes spin-galaxy {
+            0% { transform: rotateX(60deg) rotateZ(0deg); }
+            100% { transform: rotateX(60deg) rotateZ(360deg); }
         }
 
-        @keyframes to-atom-3 {
-            0%, 45% { transform: translate(-50%, -50%) rotateX(0deg) rotateY(0deg); width: 260px; height: 260px; }
-            65%, 100% { transform: translate(-50%, -50%) rotateX(75deg) rotateY(90deg); width: 220px; height: 220px; border-color: rgba(100, 200, 255, 0.6); border-width: 2px; }
+        @keyframes collapse-galaxy {
+            0% { transform: rotateX(60deg) rotateZ(0deg) scale(1); opacity: 1; filter: blur(4px); }
+            40% { transform: rotateX(30deg) rotateZ(360deg) scale(1.2); opacity: 1; filter: blur(2px); }
+            100% { transform: rotateX(0deg) rotateZ(1080deg) scale(0); opacity: 0; filter: blur(0px); }
         }
 
-        @keyframes cosmos-zoom {
-            0% { transform: scale(1) rotate(0deg); }
-            45% { transform: scale(0.5) rotate(0deg); }
-            65% { transform: scale(1.1) rotate(180deg); }
-            100% { transform: scale(1.3) rotate(360deg); }
+        @keyframes launch-rocket {
+            0% { transform: translateY(0) scale(0.1); opacity: 0; }
+            10% { transform: translateY(-5px) scale(0.3); opacity: 1; }
+            100% { transform: translateY(-350px) scale(1.8); opacity: 0; }
         }
 
-        @keyframes center-pulse {
-            0%, 45% { background: #ffcc00; box-shadow: 0 0 30px #ffcc00; width: 24px; height: 24px; }
-            65%, 100% { background: #00eeff; box-shadow: 0 0 40px #00eeff; width: 14px; height: 14px; }
+        @keyframes reveal-atom {
+            0% { opacity: 0; transform: scale(0); }
+            60% { opacity: 1; transform: scale(1.1); }
+            100% { opacity: 1; transform: scale(1); }
         }
+
+        @keyframes flicker {
+            0% { transform: scaleY(1); opacity: 1; }
+            100% { transform: scaleY(0.7); opacity: 0.8; }
+        }
+
+        @keyframes spin-orbit {
+            0% { transform: rotateX(75deg) rotateY(var(--ry, 0deg)) rotateZ(0deg); }
+            100% { transform: rotateX(75deg) rotateY(var(--ry, 0deg)) rotateZ(360deg); }
+        }
+
+        .o1 { --ry: 0deg; }
+        .o2 { --ry: 60deg; }
+        .o3 { --ry: 120deg; }
+
 
         /* Navigation */
         nav {
@@ -443,17 +529,29 @@
 <body class="loading">
 
     <div id="loader">
-        <div class="cosmos">
-            <div class="ring r1"></div>
-            <div class="ring r2"></div>
-            <div class="ring r3"></div>
-            <div class="center-mass"></div>
-            <div class="rocket"></div>
+        <div class="loader-stage">
+            <div class="milky-way"></div>
+            
+            <div class="rocket-container">
+                <div class="rocket">
+                    <div class="rocket-window"></div>
+                    <div class="rocket-body"></div>
+                    <div class="rocket-fins"></div>
+                    <div class="rocket-flame"></div>
+                </div>
+            </div>
+
+            <div class="atom">
+                <div class="nucleus"></div>
+                <div class="orbit o1"></div>
+                <div class="orbit o2"></div>
+                <div class="orbit o3"></div>
+            </div>
         </div>
     </div>
 
     <nav>
-        <div class="logo" onclick="nav('home')">Sapiens</div>
+        <div class="logo" onclick="nav('home')">Sapiens Research Labs</div>
         <div class="nav-links">
             <a onclick="nav('home')" class="active" data-target="home">Home</a>
             <a onclick="nav('ug-program')" data-target="ug-program">UG Program</a>
@@ -643,32 +741,29 @@
     </div>
 
     <div id="knowledge" class="page">
+        <h1 class="fade-up">Learn Without Waiting.</h1>
+        <p class="fade-up delay-1">An open digital library designed for deep, structured STEM learning. Accessible to anyone globally.</p>
+
         <div class="spacer"></div>
 
-<div style="max-width: 800px; margin: 0 auto; text-align: center;">
-    
-    <h2>Generate Your Learning Path</h2>
-    <p>Enter any topic in science or technology</p>
+        <div class="grid">
+            <div class="card fade-up delay-1">
+                <h3>Domain-Specific Paths</h3>
+                <p>Curated roadmaps from zero to state-of-the-art.</p>
+            </div>
+            <div class="card fade-up delay-2">
+                <h3>Research Curriculum</h3>
+                <p>Designed to take you to the frontier of human knowledge.</p>
+            </div>
+            <div class="card fade-up delay-3">
+                <h3>Self-Paced & Rigorous</h3>
+                <p>No deadlines, but extreme intellectual demands.</p>
+            </div>
+        </div>
 
-  <div style="margin-top: 2rem;">
-    <input 
-        id="userInput"
-        type="text"
-        placeholder="Ask anything in science… (e.g. Quantum Mechanics)"
-        onkeypress="handleKey(event)"
-        style="text-align: center; font-size: 1.2rem;"
-    >
-</div>
-    <div style="margin-top: 2rem;">
-        <button class="btn" onclick="generateCurriculum()">
-            Generate Curriculum
-        </button>
+        <div class="spacer"></div>
+        <a href="#" class="btn btn-outline fade-up">Explore Knowledge Engine</a>
     </div>
-
-   
-
-</div>
-       
 
     <div id="admissions" class="page">
         <h1 class="fade-up">Selection is the Filter.</h1>
@@ -782,69 +877,19 @@
             setTimeout(initAnimations, 50);
         }
 
-        // Handle Loading Screen
+        // Handle Loading Screen Sequence
         window.addEventListener('load', () => {
-            // Wait for the 4-second CSS animation to complete
+            // The entire sequence takes about 4.5 seconds
             setTimeout(() => {
                 const loader = document.getElementById('loader');
                 loader.style.opacity = '0';
                 loader.style.visibility = 'hidden';
                 document.body.classList.remove('loading');
                 
-                // Trigger page animations slightly after loader fades
+                // Trigger page scroll animations slightly after loader fades out
                 setTimeout(initAnimations, 400); 
-            }, 4200); 
+            }, 4500); 
         });
-        function handleKey(event) {
-    if (event.key === "Enter") {
-        generateCurriculum();
-    }
-}
-        async function generateCurriculum() {
-    const inputEl = document.getElementById("userInput");
-    const input = inputEl.value;
-    const outputDiv = document.getElementById("output");
-
-    if (!input) {
-        outputDiv.innerHTML = "<p>Please enter a topic.</p>";
-        return;
-    }
-
-    // 🔥 UI transformation
-    inputEl.style.textAlign = "left";
-    inputEl.style.borderBottom = "1px solid white";
-    inputEl.blur();
-
-    outputDiv.innerHTML = "<p>Thinking...</p>";
-
-    try {
-        const response = await fetch("/api/generate", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ input })
-        });
-
-        const data = await response.json();
-
-        outputDiv.innerHTML = `
-            <div class="card">
-                <h3>${input}</h3>
-                <p>${data.text.replace(/\n/g, "<br>")}</p>
-            </div>
-        `;
-
-    } catch (err) {
-        outputDiv.innerHTML = "<p>Error generating curriculum.</p>";
-    }
-}
     </script>
-        
-    <script src="https://cdn.botpress.cloud/webchat/v3.6/inject.js"></script>
-<script src="https://files.bpcontent.cloud/2026/03/27/20/20260327200406-KAE3VFQ6.js" defer></script>
-    
-       
-       
 </body>
 </html>
