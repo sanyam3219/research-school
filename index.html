@@ -815,28 +815,64 @@
                 setTimeout(initAnimations, 400); 
             }, 4200); 
         });
+        // --- ADD THIS TO THE BOTTOM OF YOUR SCRIPT TAG ---
+
+        async function generateCurriculum() {
+            const inputField = document.getElementById('userInput');
+            const outputDiv = document.getElementById('output');
+            const topic = inputField.value.trim();
+
+            if (!topic) {
+                outputDiv.innerHTML = "<p style='color: #ff3333;'>Error: Input required.</p>";
+                return;
+            }
+
+            // Loading state
+            outputDiv.innerHTML = "<p style='color: var(--text-dim);'>Synthesizing curriculum for " + topic + "...</p>";
+
+            try {
+                // =====================================================================
+                // REPLACE THE URL BELOW WITH YOUR ACTUAL RENDER.COM URL
+                // Make sure to keep the "/api/generate" at the very end!
+                // =====================================================================
+                const backendUrl = 'https://sapiens-backend-hqgj.onrender.com/api/generate';
+                
+                const response = await fetch(backendUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ topic: topic })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response failed');
+                }
+
+                const data = await response.json();
+
+                // Format the output into a Sapiens Card
+                if (data.result) {
+                    // Replace markdown bolding (**) and linebreaks for basic HTML formatting
+                    let formattedText = data.result.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                    formattedText = formattedText.replace(/\n/g, '<br>');
+                    
+                    outputDiv.innerHTML = `
+                        <div class="card fade-up visible" style="margin-top: 2rem;">
+                            <h3 style="color: var(--text);">Learning Path: ${topic}</h3>
+                            <p style="color: var(--text-dim);">${formattedText}</p>
+                        </div>
+                    `;
+                } else {
+                    outputDiv.innerHTML = "<p style='color: #ff3333;'>Error generating path.</p>";
+                }
+
+            } catch (error) {
+                console.error("Fetch error:", error);
+                outputDiv.innerHTML = "<p style='color: #ff3333;'>Connection error. Is the backend online?</p>";
+            }
+        }
     </script>
-    <script>
-  window.botpressWebChat.init({
-    botId: "KAE3VFQ6",
-    hostUrl: "https://cdn.botpress.cloud/webchat/v1",
-    messagingUrl: "https://messaging.botpress.cloud",
-    showWidget: false   // 🔥 IMPORTANT (hides bubble)
-  });
-</script>
-<script>
-function generateCurriculum() {
-    const input = document.getElementById("userInput").value;
-
-    if (!input) return;
-
-    window.botpressWebChat.sendEvent({
-        type: "text",
-        text: input
-    });
-
-    window.botpressWebChat.open(); // opens chat UI
-}
-</script>
+   
 </body>
 </html>
