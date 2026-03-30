@@ -686,12 +686,12 @@
             <!-- Initial search state -->
             <div id="search-state" style="text-align: center;">
                 <h2 style="margin-bottom: 0.5rem;">Knowledge Engine</h2>
-                <p style="margin-bottom: 2rem;">Ask anything in science or technology</p>
+                
                 <div style="position: relative;">
                     <input
                         id="userInput"
                         type="text"
-                        placeholder="e.g. How does quantum entanglement work?"
+                        placeholder="e.g. Physics, Computer Science, Quantum Computing..."
                         style="text-align: left; font-size: 1.1rem; padding: 1.2rem 5rem 1.2rem 1.2rem; border: 1px solid var(--border); border-radius: 4px;"
                         aria-label="Ask a science or technology question"
                         onkeydown="if(event.key==='Enter') startConversation()"
@@ -699,10 +699,11 @@
                     <button onclick="startConversation()" aria-label="Submit question" style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: var(--text); font-size: 1.4rem; padding: 0;">&#9654;</button>
                 </div>
                 <div style="margin-top: 1.5rem; display: flex; gap: 0.8rem; justify-content: center; flex-wrap: wrap;" id="suggestion-chips">
-                    <button class="chip" onclick="askSuggestion('Explain quantum field theory')">Quantum Field Theory</button>
-                    <button class="chip" onclick="askSuggestion('How do neural networks learn?')">Neural Networks</button>
-                    <button class="chip" onclick="askSuggestion('What is CRISPR?')">CRISPR</button>
-                    <button class="chip" onclick="askSuggestion('Fundamentals of thermodynamics')">Thermodynamics</button>
+                    <button class="chip" onclick="askSuggestion('Physics')">Physics</button>
+                    <button class="chip" onclick="askSuggestion('Computer Science')">Computer Science</button>
+                    <button class="chip" onclick="askSuggestion('Mathematics')">Mathematics</button>
+                    <button class="chip" onclick="askSuggestion('Systems Engineering')">Systems Engineering</button>
+                    <button class="chip" onclick="askSuggestion('Computational Biology')">Computational Biology</button>
                 </div>
             </div>
 
@@ -868,12 +869,29 @@
                 .replace(/'/g, '&#x27;');
         }
 
-        function formatResponse(text) {
-            return text
-                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                .replace(/\*(.*?)\*/g, '<em>$1</em>')
-                .replace(/\n\n/g, '</p><p>')
-                .replace(/\n/g, '<br>');
+        function formatResponse(raw) {
+            let text = raw;
+            // H2
+            text = text.replace(/^## (.+)$/gm, '<h2 style="font-size:1.8rem;font-weight:700;margin:2rem 0 1rem;letter-spacing:-0.5px;color:var(--text);">$1</h2>');
+            // H3
+            text = text.replace(/^### (.+)$/gm, '<h3 style="font-size:1.1rem;font-weight:600;color:var(--text);margin:1.5rem 0 0.8rem;text-transform:uppercase;letter-spacing:1px;border-left:2px solid rgba(255,255,255,0.3);padding-left:0.8rem;">$1</h3>');
+            // Bold
+            text = text.replace(/\*\*(.*?)\*\*/g, '<strong style="color:var(--text);">$1</strong>');
+            // Italic
+            text = text.replace(/\*([^*\n]+)\*/g, '<em>$1</em>');
+            // Markdown links [text](url)
+            text = text.replace(/\[([^\]]+)\]\((https?:\/\/[^\)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer" style="color:#7eb8ff;text-decoration:none;border-bottom:1px solid rgba(126,184,255,0.3);">$1 ↗</a>');
+            // Bare URLs
+            text = text.replace(/(?<!\()(https?:\/\/[^\s<>")\]]+)/g, '<a href="$1" target="_blank" rel="noopener noreferrer" style="color:#7eb8ff;text-decoration:none;border-bottom:1px solid rgba(126,184,255,0.3);">$1 ↗</a>');
+            // Bullet items
+            text = text.replace(/^- (.+)$/gm, '<li style="padding:0.3rem 0;color:var(--text-dim);">$1</li>');
+            text = text.replace(/(<li[\s\S]*?<\/li>\n?)+/g, '<ul style="list-style:none;padding-left:1rem;margin:0.5rem 0 1rem;">$&</ul>');
+            // HR
+            text = text.replace(/^---$/gm, '<hr style="border:none;border-top:1px solid var(--border);margin:1.5rem 0;">');
+            // Paragraphs
+            text = text.replace(/\n\n/g, '</p><p style="color:var(--text-dim);max-width:100%;margin:0.4rem 0;">');
+            text = text.replace(/\n/g, '<br>');
+            return text;
         }
 
         function askSuggestion(text) {
@@ -955,7 +973,7 @@
 
                 if (data.result) {
                     const formatted = formatResponse(data.result);
-                    document.getElementById(answerId).innerHTML = `<p>${formatted}</p>`;
+                    document.getElementById(answerId).innerHTML = `<div style="max-width:100%;"><p style="color:var(--text-dim);max-width:100%;margin:0;">${formatted}</p></div>`;
                     conversationHistory.push({ role: 'assistant', content: data.result });
                     // Focus follow-up input
                     document.getElementById('followupInput').focus();
