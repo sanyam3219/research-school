@@ -850,6 +850,11 @@
             statusEl.style.color = '#55ff99';
             statusEl.textContent = 'Opening your email client...';
         }
+        // Ping backend every 10 minutes to prevent sleep
+setInterval(() => {
+    fetch('https://sapiens-backend-1.onrender.com/health')
+        .catch(() => {}); // silently ignore errors
+}, 10 * 60 * 1000);
     </script>
 </body>
 </html>
