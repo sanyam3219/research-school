@@ -1,9 +1,14 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sapiens Group</title>
+    <meta name="description" content="Sapiens Group — An ecosystem for building scientists. India's most selective science and engineering program for the top 1% of curious minds.">
+    <meta property="og:title" content="Sapiens Group">
+    <meta property="og:description" content="Towards India's next Nobel Prize. A residential UG program, research network, and knowledge engine for deep science talent.">
+    <meta property="og:type" content="website">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600;700&display=swap');
 
@@ -17,11 +22,7 @@
             --font: 'Space Grotesk', sans-serif;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             background-color: var(--bg);
@@ -32,32 +33,24 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        body.loading {
-            overflow: hidden;
-        }
+        body.loading { overflow: hidden; }
 
-        /* Ambient Background */
         body::before {
             content: '';
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
             background: 
                 radial-gradient(circle at 15% 50%, var(--accent-blue), transparent 40%),
                 radial-gradient(circle at 85% 30%, var(--accent-purple), transparent 40%);
             z-index: -2;
         }
 
-        /* Abstract Grid Overlay */
         body::after {
             content: '';
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
             background-image: 
                 linear-gradient(var(--border) 1px, transparent 1px),
                 linear-gradient(90deg, var(--border) 1px, transparent 1px);
@@ -66,13 +59,11 @@
             z-index: -1;
         }
 
-        /* Loader Animation */
+        /* Loader */
         #loader {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
             background: #030303;
             z-index: 9999;
             display: flex;
@@ -83,48 +74,43 @@
 
         .cosmos {
             position: relative;
-            width: 300px;
-            height: 300px;
+            width: 300px; height: 300px;
             display: flex;
             justify-content: center;
             align-items: center;
             transform-style: preserve-3d;
-            animation: cosmos-zoom 4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            animation: cosmos-zoom 2.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
         }
 
         .center-mass {
             position: absolute;
-            width: 24px;
-            height: 24px;
+            width: 24px; height: 24px;
             border-radius: 50%;
-            animation: center-pulse 4s forwards;
+            animation: center-pulse 2.5s forwards;
             z-index: 10;
         }
 
         .ring {
             position: absolute;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255,255,255,0.2);
             border-radius: 50%;
-            top: 50%;
-            left: 50%;
+            top: 50%; left: 50%;
             transform-origin: center;
         }
 
-        .r1 { width: 100px; height: 100px; animation: to-atom-1 4s forwards; }
-        .r2 { width: 180px; height: 180px; animation: to-atom-2 4s forwards; }
-        .r3 { width: 260px; height: 260px; animation: to-atom-3 4s forwards; }
+        .r1 { width: 100px; height: 100px; animation: to-atom-1 2.5s forwards; }
+        .r2 { width: 180px; height: 180px; animation: to-atom-2 2.5s forwards; }
+        .r3 { width: 260px; height: 260px; animation: to-atom-3 2.5s forwards; }
 
         .rocket {
             position: absolute;
-            width: 4px;
-            height: 20px;
+            width: 4px; height: 20px;
             background: #ffffff;
             border-radius: 50% 50% 2px 2px;
-            top: 50%;
-            left: 50%;
+            top: 50%; left: 50%;
             transform-origin: bottom center;
-            box-shadow: 0 6px 15px rgba(255, 100, 0, 0.9);
-            animation: rocket-launch 2.5s cubic-bezier(0.5, 0, 0.8, 1) forwards;
+            box-shadow: 0 6px 15px rgba(255,100,0,0.9);
+            animation: rocket-launch 2s cubic-bezier(0.5, 0, 0.8, 1) forwards;
             z-index: 5;
         }
 
@@ -137,26 +123,22 @@
 
         @keyframes to-atom-1 {
             0%, 45% { transform: translate(-50%, -50%) rotateX(0deg) rotateY(0deg); width: 100px; height: 100px; }
-            65%, 100% { transform: translate(-50%, -50%) rotateX(75deg) rotateY(45deg); width: 220px; height: 220px; border-color: rgba(100, 150, 255, 0.6); border-width: 2px; }
+            65%, 100% { transform: translate(-50%, -50%) rotateX(75deg) rotateY(45deg); width: 220px; height: 220px; border-color: rgba(100,150,255,0.6); border-width: 2px; }
         }
-
         @keyframes to-atom-2 {
             0%, 45% { transform: translate(-50%, -50%) rotateX(0deg) rotateY(0deg); width: 180px; height: 180px; }
-            65%, 100% { transform: translate(-50%, -50%) rotateX(75deg) rotateY(-45deg); width: 220px; height: 220px; border-color: rgba(150, 100, 255, 0.6); border-width: 2px; }
+            65%, 100% { transform: translate(-50%, -50%) rotateX(75deg) rotateY(-45deg); width: 220px; height: 220px; border-color: rgba(150,100,255,0.6); border-width: 2px; }
         }
-
         @keyframes to-atom-3 {
             0%, 45% { transform: translate(-50%, -50%) rotateX(0deg) rotateY(0deg); width: 260px; height: 260px; }
-            65%, 100% { transform: translate(-50%, -50%) rotateX(75deg) rotateY(90deg); width: 220px; height: 220px; border-color: rgba(100, 200, 255, 0.6); border-width: 2px; }
+            65%, 100% { transform: translate(-50%, -50%) rotateX(75deg) rotateY(90deg); width: 220px; height: 220px; border-color: rgba(100,200,255,0.6); border-width: 2px; }
         }
-
         @keyframes cosmos-zoom {
             0% { transform: scale(1) rotate(0deg); }
             45% { transform: scale(0.5) rotate(0deg); }
             65% { transform: scale(1.1) rotate(180deg); }
             100% { transform: scale(1.3) rotate(360deg); }
         }
-
         @keyframes center-pulse {
             0%, 45% { background: #ffcc00; box-shadow: 0 0 30px #ffcc00; width: 24px; height: 24px; }
             65%, 100% { background: #00eeff; box-shadow: 0 0 40px #00eeff; width: 14px; height: 14px; }
@@ -165,9 +147,8 @@
         /* Navigation */
         nav {
             position: fixed;
-            top: 0;
-            width: 100%;
-            background: rgba(3, 3, 3, 0.8);
+            top: 0; width: 100%;
+            background: rgba(3,3,3,0.8);
             backdrop-filter: blur(10px);
             border-bottom: 1px solid var(--border);
             z-index: 100;
@@ -200,11 +181,28 @@
             cursor: pointer;
         }
 
-        .nav-links a:hover, .nav-links a.active {
-            color: var(--text);
+        .nav-links a:hover, .nav-links a.active { color: var(--text); }
+
+        /* Hamburger */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            padding: 4px;
+            background: none;
+            border: none;
+            aria-label: "Toggle navigation";
         }
 
-        /* Layout & Pages */
+        .hamburger span {
+            display: block;
+            width: 24px; height: 2px;
+            background: var(--text);
+            transition: all 0.3s ease;
+        }
+
+        /* Pages */
         .page {
             display: none;
             min-height: 100vh;
@@ -213,11 +211,8 @@
             margin: 0 auto;
         }
 
-        .page.active {
-            display: block;
-        }
+        .page.active { display: block; }
 
-        /* Typography */
         h1 {
             font-size: clamp(3rem, 8vw, 6rem);
             line-height: 1;
@@ -239,7 +234,7 @@
             color: var(--text-dim);
             margin-bottom: 1rem;
         }
-        
+
         h4 {
             font-size: 1.2rem;
             font-weight: 600;
@@ -262,7 +257,6 @@
             margin-bottom: 1rem;
         }
 
-        /* Components */
         .btn {
             display: inline-block;
             background: var(--text);
@@ -275,12 +269,11 @@
             border: 1px solid var(--text);
             transition: all 0.3s ease;
             cursor: pointer;
+            font-family: var(--font);
+            font-size: 1rem;
         }
 
-        .btn:hover {
-            background: transparent;
-            color: var(--text);
-        }
+        .btn:hover { background: transparent; color: var(--text); }
 
         .btn-outline {
             background: transparent;
@@ -288,10 +281,7 @@
             border: 1px solid var(--border);
         }
 
-        .btn-outline:hover {
-            border-color: var(--text);
-            background: rgba(255,255,255,0.05);
-        }
+        .btn-outline:hover { border-color: var(--text); background: rgba(255,255,255,0.05); }
 
         .grid {
             display: grid;
@@ -299,7 +289,7 @@
             gap: 2rem;
             margin-top: 4rem;
         }
-        
+
         .curriculum-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
@@ -315,18 +305,10 @@
             transition: border-color 0.3s ease;
         }
 
-        .card:hover {
-            border-color: rgba(255,255,255,0.3);
-        }
+        .card:hover { border-color: rgba(255,255,255,0.3); }
+        .card h3 { color: var(--text); margin-bottom: 1.5rem; }
 
-        .card h3 {
-            color: var(--text);
-            margin-bottom: 1.5rem;
-        }
-
-        ul.minimal-list {
-            list-style: none;
-        }
+        ul.minimal-list { list-style: none; }
 
         ul.minimal-list li {
             border-bottom: 1px solid var(--border);
@@ -334,17 +316,15 @@
             color: var(--text-dim);
             font-size: 1.1rem;
         }
-        
-        ul.minimal-list li:last-child {
-            border-bottom: none;
-        }
-        
+
+        ul.minimal-list li:last-child { border-bottom: none; }
+
         .timeline-item {
             margin-bottom: 1.5rem;
             padding-left: 1rem;
             border-left: 1px solid var(--border);
         }
-        
+
         .timeline-item span {
             display: block;
             color: var(--text);
@@ -355,7 +335,6 @@
             text-transform: uppercase;
         }
 
-        /* Page Specific */
         .hero-section {
             height: calc(100vh - 120px);
             display: flex;
@@ -377,13 +356,9 @@
             transition: color 0.3s ease;
         }
 
-        .bold-list span:hover {
-            color: var(--text);
-        }
+        .bold-list span:hover { color: var(--text); }
 
-        .form-group {
-            margin-bottom: 2rem;
-        }
+        .form-group { margin-bottom: 2rem; }
 
         input, textarea {
             width: 100%;
@@ -397,13 +372,27 @@
             transition: border-color 0.3s ease;
         }
 
-        input:focus, textarea:focus {
-            outline: none;
-            border-color: var(--text);
+        input:focus, textarea:focus { outline: none; border-color: var(--text); }
+
+        .spacer { height: 10vh; }
+
+        /* Skeleton loader */
+        .skeleton {
+            background: linear-gradient(90deg, rgba(255,255,255,0.05) 25%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.05) 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+            border-radius: 4px;
+            height: 1.2rem;
+            margin-bottom: 0.8rem;
         }
 
-        .spacer {
-            height: 10vh;
+        .skeleton.wide { width: 100%; }
+        .skeleton.medium { width: 75%; }
+        .skeleton.narrow { width: 50%; }
+
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
         }
 
         /* Scroll Animations */
@@ -413,30 +402,40 @@
             transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        .fade-up.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
+        .fade-up.visible { opacity: 1; transform: translateY(0); }
 
         .delay-1 { transition-delay: 0.1s; }
         .delay-2 { transition-delay: 0.2s; }
         .delay-3 { transition-delay: 0.3s; }
         .delay-4 { transition-delay: 0.4s; }
 
+        /* How It Works — responsive grid */
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
         @media (max-width: 768px) {
             nav {
-                flex-direction: column;
-                gap: 1rem;
-                padding: 1rem;
-            }
-            .nav-links {
                 flex-wrap: wrap;
-                justify-content: center;
                 gap: 1rem;
+                padding: 1rem 1.5rem;
             }
-            .page {
-                padding-top: 150px;
+
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                width: 100%;
+                gap: 0.8rem;
+                padding-top: 0.5rem;
             }
+
+            .nav-links.open { display: flex; }
+
+            .hamburger { display: flex; }
+
+            .page { padding-top: 160px; }
         }
     </style>
 </head>
@@ -452,24 +451,28 @@
         </div>
     </div>
 
-    <nav>
-        <div class="logo" onclick="nav('home')">Sapiens</div>
-        <div class="nav-links">
-            <a onclick="nav('home')" class="active" data-target="home">Home</a>
-            <a onclick="nav('ug-program')" data-target="ug-program">UG Program</a>
-            <a onclick="nav('network')" data-target="network">Research Network</a>
-            <a onclick="nav('knowledge')" data-target="knowledge">Knowledge Engine</a>
-            <a onclick="nav('admissions')" data-target="admissions">Admissions</a>
-            <a onclick="nav('philosophy')" data-target="philosophy">Philosophy</a>
-            <a onclick="nav('contact')" data-target="contact">Contact</a>
+    <nav role="navigation" aria-label="Main navigation">
+        <div class="logo" onclick="nav('home')" role="link" tabindex="0" aria-label="Sapiens home">Sapiens</div>
+        <button class="hamburger" onclick="toggleMenu()" aria-label="Toggle navigation menu" aria-expanded="false" id="hamburger-btn">
+            <span></span><span></span><span></span>
+        </button>
+        <div class="nav-links" id="nav-links">
+            <a onclick="nav('home')" class="active" data-target="home" role="button" tabindex="0">Home</a>
+            <a onclick="nav('ug-program')" data-target="ug-program" role="button" tabindex="0">UG Program</a>
+            <a onclick="nav('network')" data-target="network" role="button" tabindex="0">Research Network</a>
+            <a onclick="nav('knowledge')" data-target="knowledge" role="button" tabindex="0">Knowledge Engine</a>
+            <a onclick="nav('admissions')" data-target="admissions" role="button" tabindex="0">Admissions</a>
+            <a onclick="nav('philosophy')" data-target="philosophy" role="button" tabindex="0">Philosophy</a>
+            <a onclick="nav('contact')" data-target="contact" role="button" tabindex="0">Contact</a>
         </div>
     </nav>
 
+    <!-- HOME -->
     <div id="home" class="page active">
         <div class="hero-section fade-up">
             <h1>For those who question everything.</h1>
-            <p>towards India's next nobel prize.</p>
-            <div><a onclick="nav('admissions')" class="btn">Apply</a></div>
+            <p>towards India's next Nobel Prize.</p>
+            <div><button onclick="nav('admissions')" class="btn" aria-label="Apply to Sapiens">Apply</button></div>
         </div>
 
         <div class="spacer"></div>
@@ -500,7 +503,7 @@
         <div class="spacer"></div>
 
         <h2 class="fade-up">How It Works</h2>
-        <div class="grid" style="grid-template-columns: repeat(4, 1fr); gap: 1rem;">
+        <div class="steps-grid" style="margin-top: 2rem;">
             <div class="card fade-up delay-1" style="padding: 2rem 1rem; text-align: center;">Apply</div>
             <div class="card fade-up delay-2" style="padding: 2rem 1rem; text-align: center;">Get Selected</div>
             <div class="card fade-up delay-3" style="padding: 2rem 1rem; text-align: center;">Enter the System</div>
@@ -517,120 +520,72 @@
         </div>
 
         <div class="spacer"></div>
-        
+
         <div class="fade-up" style="text-align: center; padding: 4rem 0; border-top: 1px solid var(--border);">
             <p style="margin: 0 auto 2rem;">Applications are limited.</p>
-            <a onclick="nav('admissions')" class="btn">Apply Now</a>
+            <button onclick="nav('admissions')" class="btn" aria-label="Apply now">Apply Now</button>
         </div>
     </div>
 
+    <!-- UG PROGRAM -->
     <div id="ug-program" class="page">
         <h1 class="fade-up">Four Years.<br>No Distractions.</h1>
         <p class="fade-up delay-1">A highly selective residential program in Bangalore designed to build deep expertise in science and engineering.</p>
-        
+
         <div class="spacer"></div>
 
         <h2 class="fade-up">The Curriculum</h2>
         <p class="fade-up delay-1">No electives. No filler. Pure depth.</p>
-        
+
         <div class="curriculum-grid">
             <div class="fade-up delay-1">
-                <h4>Mathematics & Physics</h4>
+                <h4>Mathematics &amp; Physics</h4>
                 <div class="spacer" style="height: 2vh;"></div>
-                <div class="timeline-item">
-                    <span>Year 1: Foundations</span>
-                    Abstract Algebra, Classical Mechanics, Real & Complex Analysis.
-                </div>
-                <div class="timeline-item">
-                    <span>Year 2: Architecture</span>
-                    Differential Geometry, Quantum Mechanics, Statistical Mechanics.
-                </div>
-                <div class="timeline-item">
-                    <span>Year 3: The Frontier</span>
-                    Quantum Field Theory, General Relativity, Directed Research.
-                </div>
-                <div class="timeline-item">
-                    <span>Year 4: Output</span>
-                    Thesis Formulation, Prototype / Simulation, Publication.
-                </div>
+                <div class="timeline-item"><span>Year 1: Foundations</span>Abstract Algebra, Classical Mechanics, Real &amp; Complex Analysis.</div>
+                <div class="timeline-item"><span>Year 2: Architecture</span>Differential Geometry, Quantum Mechanics, Statistical Mechanics.</div>
+                <div class="timeline-item"><span>Year 3: The Frontier</span>Quantum Field Theory, General Relativity, Directed Research.</div>
+                <div class="timeline-item"><span>Year 4: Output</span>Thesis Formulation, Prototype / Simulation, Publication.</div>
             </div>
-
             <div class="fade-up delay-2">
-                <h4>Mathematics & Computer Science</h4>
+                <h4>Mathematics &amp; Computer Science</h4>
                 <div class="spacer" style="height: 2vh;"></div>
-                <div class="timeline-item">
-                    <span>Year 1: Foundations</span>
-                    Combinatorics, Theory of Computation, Systems Programming (C/Rust).
-                </div>
-                <div class="timeline-item">
-                    <span>Year 2: Architecture</span>
-                    Cryptography, Distributed Systems, Compiler Design.
-                </div>
-                <div class="timeline-item">
-                    <span>Year 3: The Frontier</span>
-                    Machine Learning Engineering, Quantum Computing, Directed Research.
-                </div>
-                <div class="timeline-item">
-                    <span>Year 4: Output</span>
-                    Thesis Formulation, Architecture Deployment, Publication.
-                </div>
+                <div class="timeline-item"><span>Year 1: Foundations</span>Combinatorics, Theory of Computation, Systems Programming (C/Rust).</div>
+                <div class="timeline-item"><span>Year 2: Architecture</span>Cryptography, Distributed Systems, Compiler Design.</div>
+                <div class="timeline-item"><span>Year 3: The Frontier</span>Machine Learning Engineering, Quantum Computing, Directed Research.</div>
+                <div class="timeline-item"><span>Year 4: Output</span>Thesis Formulation, Architecture Deployment, Publication.</div>
             </div>
-
             <div class="fade-up delay-3">
                 <h4>Systems Engineering</h4>
                 <div class="spacer" style="height: 2vh;"></div>
-                <div class="timeline-item">
-                    <span>Year 1: Foundations</span>
-                    Control Theory, Embedded Systems, Advanced Circuit Design.
-                </div>
-                <div class="timeline-item">
-                    <span>Year 2: Architecture</span>
-                    Robotics Kinematics, Signal Processing, Microarchitecture.
-                </div>
-                <div class="timeline-item">
-                    <span>Year 3: The Frontier</span>
-                    Autonomous Systems, Aerospace Dynamics, Directed Research.
-                </div>
-                <div class="timeline-item">
-                    <span>Year 4: Output</span>
-                    Hardware Prototype, Stress Testing, Publication.
-                </div>
+                <div class="timeline-item"><span>Year 1: Foundations</span>Control Theory, Embedded Systems, Advanced Circuit Design.</div>
+                <div class="timeline-item"><span>Year 2: Architecture</span>Robotics Kinematics, Signal Processing, Microarchitecture.</div>
+                <div class="timeline-item"><span>Year 3: The Frontier</span>Autonomous Systems, Aerospace Dynamics, Directed Research.</div>
+                <div class="timeline-item"><span>Year 4: Output</span>Hardware Prototype, Stress Testing, Publication.</div>
             </div>
         </div>
 
         <div class="spacer"></div>
 
         <div class="grid">
-            <div class="card fade-up delay-1">
-                <h3>Mentorship-Driven</h3>
-                <p>Learn directly from operators and experts, not just lecturers.</p>
-            </div>
-            <div class="card fade-up delay-2">
-                <h3>Research-First</h3>
-                <p>Publish, prototype, and push boundaries from day one.</p>
-            </div>
-            <div class="card fade-up delay-3">
-                <h3>Zero Classrooms</h3>
-                <p>No traditional classroom structure. Project and thesis oriented.</p>
-            </div>
-            <div class="card fade-up delay-4">
-                <h3>Real-World Focus</h3>
-                <p>Focus entirely on solving real-world, hard physical and computational problems.</p>
-            </div>
+            <div class="card fade-up delay-1"><h3>Mentorship-Driven</h3><p>Learn directly from operators and experts, not just lecturers.</p></div>
+            <div class="card fade-up delay-2"><h3>Research-First</h3><p>Publish, prototype, and push boundaries from day one.</p></div>
+            <div class="card fade-up delay-3"><h3>Zero Classrooms</h3><p>No traditional classroom structure. Project and thesis oriented.</p></div>
+            <div class="card fade-up delay-4"><h3>Real-World Focus</h3><p>Focus entirely on solving real-world, hard physical and computational problems.</p></div>
         </div>
 
         <div class="spacer"></div>
-        <a onclick="nav('admissions')" class="btn fade-up">Apply for UG Program</a>
+        <button onclick="nav('admissions')" class="btn fade-up" aria-label="Apply for UG Program">Apply for UG Program</button>
     </div>
 
+    <!-- NETWORK -->
     <div id="network" class="page">
-        <h1 class="fade-up">Research Doesn’t Belong to Institutions.</h1>
+        <h1 class="fade-up">Research Doesn't Belong to Institutions.</h1>
         <p class="fade-up delay-1">A decentralized, offline-first research community across India. Open access but selective entry.</p>
 
         <div class="spacer"></div>
 
         <h2 class="fade-up">Infrastructure</h2>
-        <ul class="minimal-list">
+        <ul class="minimal-list" role="list">
             <li class="fade-up delay-1"><strong>City Meetups</strong> — Regular high-density intellectual gatherings.</li>
             <li class="fade-up delay-2"><strong>Hackathons</strong> — Time-boxed, intense building sessions.</li>
             <li class="fade-up delay-3"><strong>Paper Discussions</strong> — Deconstructing state-of-the-art research.</li>
@@ -639,9 +594,10 @@
         </ul>
 
         <div class="spacer"></div>
-        <a onclick="nav('contact')" class="btn fade-up">Join the Network</a>
+        <button onclick="nav('contact')" class="btn fade-up" aria-label="Join the Research Network">Join the Network</button>
     </div>
 
+    <!-- KNOWLEDGE ENGINE -->
     <div id="knowledge" class="page">
         <h1 class="fade-up">Learn Without Waiting.</h1>
         <p class="fade-up delay-1">An open digital library designed for deep, structured STEM learning. Accessible to anyone globally.</p>
@@ -649,47 +605,39 @@
         <div class="spacer"></div>
 
         <div class="grid">
-            <div class="card fade-up delay-1">
-                <h3>Domain-Specific Paths</h3>
-                <p>Curated roadmaps from zero to state-of-the-art.</p>
-            </div>
-            <div class="card fade-up delay-2">
-                <h3>Research Curriculum</h3>
-                <p>Designed to take you to the frontier of human knowledge.</p>
-            </div>
-            <div class="card fade-up delay-3">
-                <h3>Self-Paced & Rigorous</h3>
-                <p>No deadlines, but extreme intellectual demands.</p>
-            </div>
+            <div class="card fade-up delay-1"><h3>Domain-Specific Paths</h3><p>Curated roadmaps from zero to state-of-the-art.</p></div>
+            <div class="card fade-up delay-2"><h3>Research Curriculum</h3><p>Designed to take you to the frontier of human knowledge.</p></div>
+            <div class="card fade-up delay-3"><h3>Self-Paced &amp; Rigorous</h3><p>No deadlines, but extreme intellectual demands.</p></div>
         </div>
 
         <div class="spacer"></div>
 
-<div style="max-width: 800px; margin: 0 auto; text-align: center;">
-    
-    <h2>Generate Your Learning Path</h2>
-    <p>Enter any topic in science or technology</p>
+        <div style="max-width: 800px; margin: 0 auto; text-align: center;">
+            <h2>Generate Your Learning Path</h2>
+            <p>Enter any topic in science or technology</p>
 
-    <div style="margin-top: 2rem;">
-        <input 
-            id="userInput"
-            type="text"
-            placeholder="e.g. Quantum Mechanics"
-            style="text-align: center; font-size: 1.2rem;"
-        >
+            <div style="margin-top: 2rem;">
+                <input 
+                    id="userInput"
+                    type="text"
+                    placeholder="e.g. Quantum Mechanics"
+                    style="text-align: center; font-size: 1.2rem;"
+                    aria-label="Enter topic for curriculum generation"
+                    onkeydown="if(event.key==='Enter') generateCurriculum()"
+                >
+            </div>
+
+            <div style="margin-top: 2rem;">
+                <button class="btn" onclick="generateCurriculum()" aria-label="Generate curriculum">
+                    Generate Curriculum
+                </button>
+            </div>
+
+            <div id="output" style="margin-top: 3rem; text-align: left;" role="region" aria-live="polite" aria-label="Generated curriculum output"></div>
+        </div>
     </div>
 
-    <div style="margin-top: 2rem;">
-        <button class="btn" onclick="generateCurriculum()">
-            Generate Curriculum
-        </button>
-    </div>
-
-    <div id="output" style="margin-top: 3rem; text-align: left;"></div>
-
-</div>
-    </div>
-
+    <!-- ADMISSIONS -->
     <div id="admissions" class="page">
         <h1 class="fade-up">Selection is the Filter.</h1>
         <p class="fade-up delay-1">Highly selective process based on curiosity, thinking ability, and intent. No emphasis on marks or traditional scores.</p>
@@ -698,27 +646,23 @@
 
         <h2 class="fade-up">The Process</h2>
         <div class="grid" style="grid-template-columns: 1fr;">
-            <div class="card fade-up delay-1">
-                <h3>1. Written Screening</h3>
-                <p>Test of fundamental logic, problem-solving, and articulation.</p>
-            </div>
-            <div class="card fade-up delay-2">
-                <h3>2. Interview</h3>
-                <p>Technical and philosophical discussion with core mentors.</p>
-            </div>
-            <div class="card fade-up delay-3">
-                <h3>3. Profile Evaluation</h3>
-                <p>Assessing past builds, obsession, and capacity for deep work.</p>
-            </div>
+            <div class="card fade-up delay-1"><h3>1. Written Screening</h3><p>Test of fundamental logic, problem-solving, and articulation.</p></div>
+            <div class="card fade-up delay-2"><h3>2. Interview</h3><p>Technical and philosophical discussion with core mentors.</p></div>
+            <div class="card fade-up delay-3"><h3>3. Profile Evaluation</h3><p>Assessing past builds, obsession, and capacity for deep work.</p></div>
         </div>
 
         <div class="spacer"></div>
-        <a href="#" class="btn fade-up">Apply for the First Cohort</a>
+
+        <div class="fade-up">
+            <p style="margin-bottom: 1rem;">Ready to apply? Send us your intent and background.</p>
+            <button onclick="nav('contact')" class="btn" aria-label="Apply for first cohort">Apply for the First Cohort</button>
+        </div>
     </div>
 
+    <!-- PHILOSOPHY -->
     <div id="philosophy" class="page">
         <h1 class="fade-up">Why This Exists.</h1>
-        
+
         <div class="spacer"></div>
 
         <div class="bold-list">
@@ -730,36 +674,34 @@
         </div>
     </div>
 
+    <!-- CONTACT -->
     <div id="contact" class="page">
         <h1 class="fade-up">Contact.</h1>
         <p class="fade-up delay-1">Sapiens Research Labs | Bangalore, India</p>
 
         <div class="spacer"></div>
 
-        <div style="max-width: 500px;">
+        <form style="max-width: 500px;" onsubmit="handleContact(event)" novalidate aria-label="Contact form">
             <div class="form-group fade-up delay-1">
-                <input type="text" placeholder="Name">
+                <input type="text" id="contact-name" placeholder="Name" autocomplete="name" aria-label="Your name" required>
             </div>
             <div class="form-group fade-up delay-2">
-                <input type="email" placeholder="Email">
+                <input type="email" id="contact-email" placeholder="Email" autocomplete="email" aria-label="Your email" required>
             </div>
             <div class="form-group fade-up delay-3">
-                <textarea rows="4" placeholder="Application inquiry or intent"></textarea>
+                <textarea id="contact-message" rows="4" placeholder="Application inquiry or intent" aria-label="Your message" required></textarea>
             </div>
-            <a href="#" class="btn btn-outline fade-up delay-4">Transmit</a>
-        </div>
+            <div id="form-status" role="alert" aria-live="polite" style="margin-bottom: 1rem; font-size: 0.95rem;"></div>
+            <button type="submit" class="btn btn-outline fade-up delay-4" aria-label="Send message">Transmit</button>
+        </form>
 
         <div class="spacer"></div>
-        <p class="fade-up">Direct: <a href="mailto:sys@sapienslabs.in" style="color: var(--text);">sys@sapienslabs.in</a></p>
+        <p class="fade-up">Direct: <a href="mailto:sys@sapienslabs.in" style="color: var(--text);" aria-label="Email Sapiens directly">sys@sapienslabs.in</a></p>
     </div>
 
     <script>
-        // Intersection Observer for scroll animations
-        const observerOptions = {
-            root: null,
-            rootMargin: '0px',
-            threshold: 0.15
-        };
+        // Intersection Observer
+        const observerOptions = { root: null, rootMargin: '0px', threshold: 0.15 };
 
         const observer = new IntersectionObserver((entries, observer) => {
             entries.forEach(entry => {
@@ -778,44 +720,46 @@
         }
 
         function nav(pageId) {
-            // Hide all pages
-            document.querySelectorAll('.page').forEach(page => {
-                page.classList.remove('active');
-            });
-            
-            // Remove active class from nav links
-            document.querySelectorAll('.nav-links a').forEach(link => {
-                link.classList.remove('active');
-            });
-
-            // Show selected page
+            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+            document.querySelectorAll('.nav-links a').forEach(link => link.classList.remove('active'));
             document.getElementById(pageId).classList.add('active');
-            
-            // Highlight nav link
             const activeLink = document.querySelector(`.nav-links a[data-target="${pageId}"]`);
-            if(activeLink) activeLink.classList.add('active');
-
-            // Scroll to top
+            if (activeLink) activeLink.classList.add('active');
             window.scrollTo(0, 0);
-
-            // Re-initialize animations for the new page
+            // Close mobile menu after nav
+            document.getElementById('nav-links').classList.remove('open');
+            const btn = document.getElementById('hamburger-btn');
+            if (btn) btn.setAttribute('aria-expanded', 'false');
             setTimeout(initAnimations, 50);
         }
 
-        // Handle Loading Screen
+        function toggleMenu() {
+            const navLinks = document.getElementById('nav-links');
+            const btn = document.getElementById('hamburger-btn');
+            const isOpen = navLinks.classList.toggle('open');
+            btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+        }
+
+        // Loader — reduced to 2.5s
         window.addEventListener('load', () => {
-            // Wait for the 4-second CSS animation to complete
             setTimeout(() => {
                 const loader = document.getElementById('loader');
                 loader.style.opacity = '0';
                 loader.style.visibility = 'hidden';
                 document.body.classList.remove('loading');
-                
-                // Trigger page animations slightly after loader fades
-                setTimeout(initAnimations, 400); 
-            }, 4200); 
+                setTimeout(initAnimations, 400);
+            }, 2700);
         });
-        // --- ADD THIS TO THE BOTTOM OF YOUR SCRIPT TAG ---
+
+        // Input sanitizer — prevents XSS
+        function sanitize(str) {
+            return str
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#x27;');
+        }
 
         async function generateCurriculum() {
             const inputField = document.getElementById('userInput');
@@ -823,59 +767,89 @@
             const topic = inputField.value.trim();
 
             if (!topic) {
-                outputDiv.innerHTML = "<p style='color: #ff3333;'>Error: Input required.</p>";
+                outputDiv.innerHTML = "<p style='color: #ff5555;' role='alert'>Error: Please enter a topic.</p>";
                 return;
             }
 
-            // Loading state
-            outputDiv.innerHTML = "<p style='color: var(--text-dim);'>Synthesizing curriculum for " + topic + "...</p>";
+            // Skeleton loading state
+            outputDiv.innerHTML = `
+                <div class="card" style="margin-top: 2rem;" aria-busy="true" aria-label="Loading curriculum">
+                    <div class="skeleton wide"></div>
+                    <div class="skeleton medium"></div>
+                    <div class="skeleton wide"></div>
+                    <div class="skeleton narrow"></div>
+                    <div class="skeleton wide"></div>
+                    <div class="skeleton medium"></div>
+                </div>
+            `;
 
             try {
-                // =====================================================================
-                // REPLACE THE URL BELOW WITH YOUR ACTUAL RENDER.COM URL
-                // Make sure to keep the "/api/generate" at the very end!
-                // =====================================================================
                 const backendUrl = 'https://sapiens-backend-1.onrender.com/api/generate';
-                
+
                 const response = await fetch(backendUrl, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ topic: topic })
                 });
 
-                if (!response.ok) {
-                    throw new Error('Network response failed');
-                }
+                if (!response.ok) throw new Error('Network response failed');
 
                 const data = await response.json();
 
-                // Format the output into a Sapiens Card
                 if (data.result) {
-                    // Replace markdown bolding (**) and linebreaks for basic HTML formatting
-                    let formattedText = data.result.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-                    formattedText = formattedText.replace(/\n/g, '<br>');
-                    
+                    // FIX: Correct regex — no escaped backslashes
+                    let formatted = data.result
+                        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                        .replace(/\n/g, '<br>');
+
+                    // Sanitize the topic display only, not the AI output
+                    const safeTopic = sanitize(topic);
+
                     outputDiv.innerHTML = `
-                        <div class="card fade-up visible" style="margin-top: 2rem;">
-                            <h3 style="color: var(--text);">Learning Path: ${topic}</h3>
-                            <p style="color: var(--text-dim);">${formattedText}</p>
+                        <div class="card fade-up visible" style="margin-top: 2rem;" role="region" aria-label="Curriculum for ${safeTopic}">
+                            <h3 style="color: var(--text); margin-bottom: 1.5rem;">Learning Path: ${safeTopic}</h3>
+                            <p style="color: var(--text-dim); max-width: 100%;">${formatted}</p>
                         </div>
                     `;
                 } else {
-                    outputDiv.innerHTML = "<p style='color: #ff3333;'>Error generating path.</p>";
+                    outputDiv.innerHTML = "<p style='color: #ff5555;' role='alert'>Error generating path. Please try again.</p>";
                 }
 
             } catch (error) {
-                console.error("Fetch error:", error);
-                outputDiv.innerHTML = "<p style='color: #ff3333;'>Connection error. Is the backend online?</p>";
+                console.error('Fetch error:', error);
+                outputDiv.innerHTML = "<p style='color: #ff5555;' role='alert'>Connection error. The backend may be warming up — please retry in 30 seconds.</p>";
             }
         }
+
+        // Contact form handler
+        function handleContact(e) {
+            e.preventDefault();
+            const name = document.getElementById('contact-name').value.trim();
+            const email = document.getElementById('contact-email').value.trim();
+            const message = document.getElementById('contact-message').value.trim();
+            const statusEl = document.getElementById('form-status');
+
+            if (!name || !email || !message) {
+                statusEl.style.color = '#ff5555';
+                statusEl.textContent = 'Please fill in all fields.';
+                return;
+            }
+
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                statusEl.style.color = '#ff5555';
+                statusEl.textContent = 'Please enter a valid email address.';
+                return;
+            }
+
+            // Mailto fallback (replace with fetch to backend when ready)
+            const subject = encodeURIComponent('Sapiens Inquiry — ' + name);
+            const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\n${message}`);
+            window.location.href = `mailto:sys@sapienslabs.in?subject=${subject}&body=${body}`;
+
+            statusEl.style.color = '#55ff99';
+            statusEl.textContent = 'Opening your email client...';
+        }
     </script>
-    
-   
-    
-   
 </body>
 </html>
