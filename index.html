@@ -686,7 +686,7 @@
             <!-- Initial search state -->
             <div id="search-state" style="text-align: center;">
                 <h2 style="margin-bottom: 0.5rem;">Knowledge Engine</h2>
-                
+                <p style="margin-bottom: 2rem;">Enter a STEM field for a 4-year curriculum with MIT OCW links &amp; textbooks — or ask any science question</p>
                 <div style="position: relative;">
                     <input
                         id="userInput"
@@ -869,42 +869,97 @@
                 .replace(/'/g, '&#x27;');
         }
 
-       function formatResponse(raw) {
-    let text = raw;
+        function formatResponse(raw) {
+            let text = raw;
 
-    // H2 headers
-    text = text.replace(/^## (.+)$/gm, '<h2 style="font-size:1.8rem;font-weight:700;margin:2rem 0 1rem;letter-spacing:-0.5px;color:var(--text);">$1</h2>');
+            // H2 headers
+            text = text.replace(/^## (.+)$/gm, '<h2 style="font-size:1.6rem;font-weight:700;margin:2rem 0 1rem;letter-spacing:-0.5px;color:var(--text);">$1</h2>');
+            // H3 headers
+            text = text.replace(/^### (.+)$/gm, '<h3 style="font-size:1rem;font-weight:600;color:var(--text);margin:1.5rem 0 0.6rem;text-transform:uppercase;letter-spacing:1px;border-left:2px solid rgba(255,255,255,0.3);padding-left:0.8rem;">$1</h3>');
+            // Bold
+            text = text.replace(/\*\*(.*?)\*\*/g, '<strong style="color:var(--text);">$1</strong>');
+            // Italic
+            text = text.replace(/\*([^*\n]+)\*/g, '<em>$1</em>');
 
-    // H3 headers
-    text = text.replace(/^### (.+)$/gm, '<h3 style="font-size:1.1rem;font-weight:600;color:var(--text);margin:1.5rem 0 0.8rem;text-transform:uppercase;letter-spacing:1px;border-left:2px solid rgba(255,255,255,0.3);padding-left:0.8rem;">$1</h3>');
+            // Markdown links [text](url) — FIRST, before bare URL pass
+            text = text.replace(/\[([^\]]+)\]\((https?:\/\/[^\)]+)\)/g,
+                '<a href="$2" target="_blank" rel="noopener noreferrer" style="color:#7eb8ff;text-decoration:none;border-bottom:1px solid rgba(126,184,255,0.3);">$1 ↗</a>');
+            // Bare URLs — skip anything already inside href="..."
+            text = text.replace(/(?<!href=")(https?:\/\/[^\s<>")\]]+)/g,
+                '<a href="$1" target="_blank" rel="noopener noreferrer" style="color:#7eb8ff;text-decoration:none;border-bottom:1px solid rgba(126,184,255,0.3);">$1 ↗</a>');
 
-    // Bold
-    text = text.replace(/\*\*(.*?)\*\*/g, '<strong style="color:var(--text);">$1</strong>');
+            // Markdown table renderer
+            const lines = text.split('\n');
+            let inTable = false;
+            let tableHtml = '';
+            let outputLines = [];
+            let isHeaderRow = true;
 
-    // Italic (but not bold)
-    text = text.replace(/\*([^*\n]+)\*/g, '<em>$1</em>');
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i].trim();
+                if (line.startsWith('|') && line.endsWith('|')) {
+                    // Skip separator rows (|---|---|)
+                    if (/^\|[\s\-\|]+\|$/.test(line)) {
+                        if (!inTable) { inTable = true; isHeaderRow = false; }
+                        continue;
+                    }
+                    if (!inTable) {
+                        inTable = true;
+                        isHeaderRow = true;
+                        tableHtml = '<div style="overflow-x:auto;margin:1.5rem 0;"><table style="width:100%;border-collapse:collapse;font-size:0.95rem;">';
+                    }
+                    const cells = line.split('|').filter((_, idx, arr) => idx > 0 && idx < arr.length - 1);
+                    if (isHeaderRow) {
+                        tableHtml += '<thead><tr>' + cells.map(c =>
+                            `<th style="padding:0.8rem 1rem;border-bottom:1px solid rgba(255,255,255,0.2);text-align:left;color:var(--text);font-weight:600;text-transform:uppercase;font-size:0.8rem;letter-spacing:1px;white-space:nowrap;">${c.trim()}</th>`
+                        ).join('') + '</tr></thead><tbody>';
+                        isHeaderRow = false;
+                    } else {
+                        // Color-code level cells
+                        const levelColors = {
+                            'beginner':     'rgba(80,200,120,0.15)',
+                            'intermediate': 'rgba(255,200,80,0.15)',
+                            'advanced':     'rgba(255,120,80,0.15)',
+                            'frontier':     'rgba(150,100,255,0.15)'
+                        };
+                        const firstCell = cells[0] ? cells[0].trim().toLowerCase() : '';
+                        const rowBg = levelColors[firstCell] || 'transparent';
+                        tableHtml += `<tr style="border-bottom:1px solid rgba(255,255,255,0.06);background:${rowBg};">` +
+                            cells.map((c, ci) => {
+                                let cellStyle = 'padding:0.75rem 1rem;color:var(--text-dim);vertical-align:top;';
+                                if (ci === 0) cellStyle += 'font-weight:600;color:var(--text);white-space:nowrap;';
+                                if (ci === 1) cellStyle += 'color:var(--text);';
+                                return `<td style="${cellStyle}">${c.trim()}</td>`;
+                            }).join('') + '</tr>';
+                    }
+                } else {
+                    if (inTable) {
+                        tableHtml += '</tbody></table></div>';
+                        outputLines.push(tableHtml);
+                        tableHtml = '';
+                        inTable = false;
+                        isHeaderRow = true;
+                    }
+                    outputLines.push(lines[i]);
+                }
+            }
+            if (inTable) {
+                tableHtml += '</tbody></table></div>';
+                outputLines.push(tableHtml);
+            }
+            text = outputLines.join('\n');
 
-    // Markdown links [text](url) — MUST run before bare URL replacement
-    text = text.replace(/\[([^\]]+)\]\((https?:\/\/[^\)]+)\)/g,
-        '<a href="$2" target="_blank" rel="noopener noreferrer" style="color:#7eb8ff;text-decoration:none;border-bottom:1px solid rgba(126,184,255,0.3);">$1 ↗</a>');
+            // Bullet items
+            text = text.replace(/^- (.+)$/gm, '<li style="padding:0.3rem 0;color:var(--text-dim);">$1</li>');
+            text = text.replace(/(<li[\s\S]*?<\/li>\n?)+/g, '<ul style="list-style:none;padding-left:1rem;margin:0.5rem 0 1rem;">$&</ul>');
+            // HR
+            text = text.replace(/^---$/gm, '<hr style="border:none;border-top:1px solid var(--border);margin:1.5rem 0;">');
+            // Paragraphs
+            text = text.replace(/\n\n/g, '</p><p style="color:var(--text-dim);max-width:100%;margin:0.4rem 0;">');
+            text = text.replace(/\n/g, '<br>');
 
-    // Bare URLs — SKIP anything already inside href="..."
-    text = text.replace(/(?<!href=")(https?:\/\/[^\s<>")\]]+)/g,
-        '<a href="$1" target="_blank" rel="noopener noreferrer" style="color:#7eb8ff;text-decoration:none;border-bottom:1px solid rgba(126,184,255,0.3);">$1 ↗</a>');
-
-    // Bullet items
-    text = text.replace(/^- (.+)$/gm, '<li style="padding:0.3rem 0;color:var(--text-dim);">$1</li>');
-    text = text.replace(/(<li[\s\S]*?<\/li>\n?)+/g, '<ul style="list-style:none;padding-left:1rem;margin:0.5rem 0 1rem;">$&</ul>');
-
-    // Horizontal rule
-    text = text.replace(/^---$/gm, '<hr style="border:none;border-top:1px solid var(--border);margin:1.5rem 0;">');
-
-    // Paragraphs
-    text = text.replace(/\n\n/g, '</p><p style="color:var(--text-dim);max-width:100%;margin:0.4rem 0;">');
-    text = text.replace(/\n/g, '<br>');
-
-    return text;
-}
+            return text;
+        }
 
         function askSuggestion(text) {
             document.getElementById('userInput').value = text;
