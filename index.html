@@ -1105,122 +1105,131 @@
         }
 
 
-        // ─── VOICE AGENT ────────────────────────────────────────────────────
+        // ─── VOICE AGENT (Sarvam) ───────────────────────────────────────────────
         (function () {
+            const BACKEND     = 'https://sapiens-backend-1.onrender.com';
             const voiceBtn    = document.getElementById('voiceBtn');
             const voiceStatus = document.getElementById('voiceStatus');
 
-            const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-            if (!SR) {
+            let mediaRecorder, audioChunks = [], isRecording = false;
+
+            if (!navigator.mediaDevices || !window.MediaRecorder) {
                 voiceBtn.disabled = true;
-                voiceBtn.title = 'Voice not supported — use Chrome or Edge';
                 voiceStatus.textContent = 'Voice requires Chrome / Edge';
                 return;
             }
 
-            const recognition = new SR();
-            recognition.lang            = 'en-IN';
-            recognition.continuous      = false;
-            recognition.interimResults  = false;
-
-            // ── TTS ─────────────────────────────────────────────────────────
-            function speak(text) {
-                window.speechSynthesis.cancel();
-                const clean = text
-                    .replace(/[#*`>|]+/g, '')
-                    .replace(/\[.*?\]\(.*?\)/g, '')
-                    .replace(/\|/g, ' ')
-                    .replace(/\n{2,}/g, '. ')
-                    .replace(/\n/g, ' ')
-                    .replace(/\s{2,}/g, ' ')
-                    .trim();
-
-                // Chunk to avoid Chrome TTS silent cutoff bug
-                const sentences = clean.match(/[^.!?]+[.!?]+/g) || [clean];
-                const chunks = [];
-                let cur = '';
-                for (const s of sentences) {
-                    if ((cur + s).length > 220) { if (cur) chunks.push(cur.trim()); cur = s; }
-                    else cur += s;
-                }
-                if (cur) chunks.push(cur.trim());
-
-                let i = 0;
-                function next() {
-                    if (i >= chunks.length) {
-                        voiceBtn.classList.remove('speaking');
-                        voiceBtn.textContent = '🎙️ Ask by Voice';
-                        voiceStatus.textContent = '';
-                        return;
-                    }
-                    const u = new SpeechSynthesisUtterance(chunks[i++]);
-                    u.lang  = 'en-IN';
-                    u.rate  = 1.0;
-                    u.pitch = 1.0;
-                    const voices = window.speechSynthesis.getVoices();
-                    const pref = voices.find(v =>
-                        v.name.includes('Google') || v.lang === 'en-IN' || v.name.includes('Natural')
-                    );
-                    if (pref) u.voice = pref;
-                    u.onend  = next;
-                    u.onerror = next;
-                    window.speechSynthesis.speak(u);
-                }
+            // ── TTS: call /api/tts → play audio ────────────────────────────
+            async function speak(text) {
                 voiceBtn.classList.add('speaking');
                 voiceBtn.textContent = '🔊 Speaking...';
                 voiceStatus.textContent = '🔊 Sapiens is speaking...';
-                next();
+                try {
+                    const res  = await fetch(`${BACKEND}/api/tts`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ text })
+                    });
+                    const data = await res.json();
+                    if (!data.audio) throw new Error('No audio returned');
+
+                    const binary = atob(data.audio);
+                    const bytes  = new Uint8Array(binary.length);
+                    for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+
+                    const ctx    = new AudioContext();
+                    const buffer = await ctx.decodeAudioData(bytes.buffer);
+                    const source = ctx.createBufferSource();
+                    source.buffer = buffer;
+                    source.connect(ctx.destination);
+                    source.start(0);
+                    source.onended = () => {
+                        voiceBtn.classList.remove('speaking');
+                        voiceBtn.textContent = '🎙️ Ask by Voice';
+                        voiceStatus.textContent = '';
+                    };
+                } catch (e) {
+                    console.error('[TTS]', e);
+                    voiceBtn.classList.remove('speaking');
+                    voiceBtn.textContent = '🎙️ Ask by Voice';
+                    voiceStatus.textContent = '⚠️ TTS failed — text shown above';
+                }
             }
 
-            // Preload voices
-            window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+            // ── Stop recording & process ────────────────────────────────────
+            async function stopAndProcess() {
+                if (!isRecording) return;
+                isRecording = false;
+                mediaRecorder.stop();
+            }
 
-            // ── Mic Button ──────────────────────────────────────────────────
-            voiceBtn.addEventListener('click', () => {
-                window.speechSynthesis.cancel();
-                voiceBtn.classList.remove('speaking');
+            // ── Mic button click ────────────────────────────────────────────
+            voiceBtn.addEventListener('click', async () => {
+                // If speaking, stop TTS
+                if (voiceBtn.classList.contains('speaking')) return;
+
+                // If recording, stop it
+                if (isRecording) {
+                    stopAndProcess();
+                    return;
+                }
+
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true }).catch(() => null);
+                if (!stream) {
+                    voiceStatus.textContent = '❌ Mic permission denied. Allow mic in browser settings.';
+                    return;
+                }
+
+                audioChunks = [];
+                mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm' });
+                mediaRecorder.ondataavailable = e => { if (e.data.size > 0) audioChunks.push(e.data); };
+
+                mediaRecorder.onstop = async () => {
+                    stream.getTracks().forEach(t => t.stop());
+                    voiceBtn.classList.remove('listening');
+                    voiceBtn.textContent = '⏳ Transcribing...';
+                    voiceStatus.textContent = '🧠 Sarvam is transcribing your speech...';
+                    voiceBtn.disabled = true;
+
+                    const blob     = new Blob(audioChunks, { type: 'audio/webm' });
+                    const formData = new FormData();
+                    formData.append('audio', blob, 'audio.webm');
+
+                    try {
+                        const sttRes  = await fetch(`${BACKEND}/api/stt`, { method: 'POST', body: formData });
+                        const sttData = await sttRes.json();
+                        const transcript = sttData.transcript?.trim();
+                        if (!transcript) throw new Error('Could not understand. Please try again.');
+
+                        voiceStatus.textContent = `📝 You said: "${transcript}"`;
+
+                        // Switch to conversation view
+                        document.getElementById('search-state').style.display    = 'none';
+                        document.getElementById('conversation-state').style.display = 'block';
+
+                        // Run through existing Groq engine
+                        await appendAndAsk(transcript);
+
+                        // Speak the last assistant reply via Sarvam TTS
+                        const last = conversationHistory[conversationHistory.length - 1];
+                        if (last?.role === 'assistant') speak(last.content);
+
+                    } catch (err) {
+                        voiceStatus.textContent = `❌ ${err.message}`;
+                        voiceBtn.textContent = '🎙️ Ask by Voice';
+                        voiceBtn.disabled = false;
+                    }
+                    voiceBtn.disabled = false;
+                };
+
+                mediaRecorder.start(250); // collect chunks every 250ms
+                isRecording = true;
                 voiceBtn.classList.add('listening');
-                voiceBtn.textContent = '🔴 Listening...';
-                voiceStatus.textContent = '🎙️ Speak your STEM topic...';
-                voiceBtn.disabled = true;
-                recognition.start();
+                voiceBtn.textContent = '🔴 Tap to Stop';
+                voiceStatus.textContent = '🎙️ Listening... tap button to stop';
             });
-
-            recognition.onresult = async (event) => {
-                const transcript = event.results[0][0].transcript.trim();
-                voiceBtn.classList.remove('listening');
-                voiceBtn.textContent = '⏳ Thinking...';
-                voiceStatus.textContent = `You said: "${transcript}"`;
-
-                // Switch to conversation view
-                document.getElementById('search-state').style.display    = 'none';
-                document.getElementById('conversation-state').style.display = 'block';
-
-                // Reuse existing chat engine
-                await appendAndAsk(transcript);
-
-                // Read the last assistant reply aloud
-                const lastAnswer = conversationHistory[conversationHistory.length - 1];
-                if (lastAnswer && lastAnswer.role === 'assistant') speak(lastAnswer.content);
-
-                voiceBtn.disabled = false;
-                voiceBtn.textContent = '🎙️ Ask by Voice';
-                voiceStatus.textContent = '';
-            };
-
-            recognition.onerror = (e) => {
-                voiceBtn.classList.remove('listening');
-                voiceBtn.disabled = false;
-                voiceBtn.textContent = '🎙️ Ask by Voice';
-                voiceStatus.textContent = `❌ Mic error: ${e.error}. Check browser permissions.`;
-            };
-
-            recognition.onend = () => {
-                voiceBtn.classList.remove('listening');
-                voiceBtn.disabled = false;
-            };
         })();
-        // ─── END VOICE AGENT ────────────────────────────────────────────────
+        // ─── END VOICE AGENT ────────────────────────────────────────────────────
 
         // Keep backend warm
         setInterval(() => {
@@ -1229,3 +1238,4 @@
         </script>
 </body>
 </html>
+
