@@ -869,30 +869,42 @@
                 .replace(/'/g, '&#x27;');
         }
 
-        function formatResponse(raw) {
-            let text = raw;
-            // H2
-            text = text.replace(/^## (.+)$/gm, '<h2 style="font-size:1.8rem;font-weight:700;margin:2rem 0 1rem;letter-spacing:-0.5px;color:var(--text);">$1</h2>');
-            // H3
-            text = text.replace(/^### (.+)$/gm, '<h3 style="font-size:1.1rem;font-weight:600;color:var(--text);margin:1.5rem 0 0.8rem;text-transform:uppercase;letter-spacing:1px;border-left:2px solid rgba(255,255,255,0.3);padding-left:0.8rem;">$1</h3>');
-            // Bold
-            text = text.replace(/\*\*(.*?)\*\*/g, '<strong style="color:var(--text);">$1</strong>');
-            // Italic
-            text = text.replace(/\*([^*\n]+)\*/g, '<em>$1</em>');
-            // Markdown links [text](url)
-            text = text.replace(/\[([^\]]+)\]\((https?:\/\/[^\)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer" style="color:#7eb8ff;text-decoration:none;border-bottom:1px solid rgba(126,184,255,0.3);">$1 ↗</a>');
-            // Bare URLs
-            text = text.replace(/(?<!\()(https?:\/\/[^\s<>")\]]+)/g, '<a href="$1" target="_blank" rel="noopener noreferrer" style="color:#7eb8ff;text-decoration:none;border-bottom:1px solid rgba(126,184,255,0.3);">$1 ↗</a>');
-            // Bullet items
-            text = text.replace(/^- (.+)$/gm, '<li style="padding:0.3rem 0;color:var(--text-dim);">$1</li>');
-            text = text.replace(/(<li[\s\S]*?<\/li>\n?)+/g, '<ul style="list-style:none;padding-left:1rem;margin:0.5rem 0 1rem;">$&</ul>');
-            // HR
-            text = text.replace(/^---$/gm, '<hr style="border:none;border-top:1px solid var(--border);margin:1.5rem 0;">');
-            // Paragraphs
-            text = text.replace(/\n\n/g, '</p><p style="color:var(--text-dim);max-width:100%;margin:0.4rem 0;">');
-            text = text.replace(/\n/g, '<br>');
-            return text;
-        }
+       function formatResponse(raw) {
+    let text = raw;
+
+    // H2 headers
+    text = text.replace(/^## (.+)$/gm, '<h2 style="font-size:1.8rem;font-weight:700;margin:2rem 0 1rem;letter-spacing:-0.5px;color:var(--text);">$1</h2>');
+
+    // H3 headers
+    text = text.replace(/^### (.+)$/gm, '<h3 style="font-size:1.1rem;font-weight:600;color:var(--text);margin:1.5rem 0 0.8rem;text-transform:uppercase;letter-spacing:1px;border-left:2px solid rgba(255,255,255,0.3);padding-left:0.8rem;">$1</h3>');
+
+    // Bold
+    text = text.replace(/\*\*(.*?)\*\*/g, '<strong style="color:var(--text);">$1</strong>');
+
+    // Italic (but not bold)
+    text = text.replace(/\*([^*\n]+)\*/g, '<em>$1</em>');
+
+    // Markdown links [text](url) — MUST run before bare URL replacement
+    text = text.replace(/\[([^\]]+)\]\((https?:\/\/[^\)]+)\)/g,
+        '<a href="$2" target="_blank" rel="noopener noreferrer" style="color:#7eb8ff;text-decoration:none;border-bottom:1px solid rgba(126,184,255,0.3);">$1 ↗</a>');
+
+    // Bare URLs — SKIP anything already inside href="..."
+    text = text.replace(/(?<!href=")(https?:\/\/[^\s<>")\]]+)/g,
+        '<a href="$1" target="_blank" rel="noopener noreferrer" style="color:#7eb8ff;text-decoration:none;border-bottom:1px solid rgba(126,184,255,0.3);">$1 ↗</a>');
+
+    // Bullet items
+    text = text.replace(/^- (.+)$/gm, '<li style="padding:0.3rem 0;color:var(--text-dim);">$1</li>');
+    text = text.replace(/(<li[\s\S]*?<\/li>\n?)+/g, '<ul style="list-style:none;padding-left:1rem;margin:0.5rem 0 1rem;">$&</ul>');
+
+    // Horizontal rule
+    text = text.replace(/^---$/gm, '<hr style="border:none;border-top:1px solid var(--border);margin:1.5rem 0;">');
+
+    // Paragraphs
+    text = text.replace(/\n\n/g, '</p><p style="color:var(--text-dim);max-width:100%;margin:0.4rem 0;">');
+    text = text.replace(/\n/g, '<br>');
+
+    return text;
+}
 
         function askSuggestion(text) {
             document.getElementById('userInput').value = text;
